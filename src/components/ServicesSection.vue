@@ -1,7 +1,7 @@
 <template >
     <section class="text-white mt-20" id="services">
         <div class="px-4 xl:pl-16">
-            <h2 class="text-4xl font-bold text-white mb-4">My Services</h2>
+            <h2 class="text-4xl font-bold text-white mb-4">Nuestros servicios</h2>
         </div>
         <div class="py-8 xl:px-16 px-4 sm:py-16 grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 md:gap-10 md:pt-12 lg:grid-cols-3">
             <div v-for="service in services" :key="service.id" data-aos="fade-up"
@@ -26,23 +26,27 @@
 </template>
 <script setup>
 import {ref} from 'vue';
+import inyeccionImg from '@/assets/inyeccion.png';
+import monitoreoImg from '@/assets/monitoreo.png';
+import lesionesImg from '@/assets/esguince.png';
 const services =ref([
     {
+        
         id:1,
-        icon:'https://img.icons8.com/ios-filled/100/ffffff/google-code.png',
-        name:'WEB DEVELOPMENT',
-        description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
+        icon:inyeccionImg,
+        name:'Inyecciones',
+        description:'¿No saber a quien recurrir para una simple inyección?'
     },
     {
         id:2,
-        icon:'https://img.icons8.com/external-vectorslab-glyph-vectorslab/100/fffeee/external-Technical-Writing-mobile-app-development-vectorslab-glyph-vectorslab.png',
-        name:'Technical Writing',
-        description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
+        icon:monitoreoImg,
+        name:'Monitoreo',
+        description:'Asistentes médicos asisten a tu domicilio para chequeo médico'
     },
     {
         id:3,
-        icon:'https://img.icons8.com/external-solid-design-circle/100/ffffff/external-Mobile-Development-digital-marketing-solid-design-circle.png',
-        name:'Mobile Development',
+        icon:lesionesImg,
+        name:'Lesiones',
         description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
     },
     {

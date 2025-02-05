@@ -6,7 +6,7 @@
         </div>
         <button type="button" class="block focus:outline-none md:hidden"
         @click="isMenuOpen = !isMenuOpen">
-            <span v-if="isMenuOpen" class="text-5xl">
+            <span v-if="isMenuOpen" class="text-5x1">
                 <img src="https://img.icons8.com/ios-filled/100/ffffff/delete-sign.png" alt="close" width="50" height="50">
             </span>
             <span v-else class="text-5xl">
