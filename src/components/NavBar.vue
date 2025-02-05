@@ -2,7 +2,7 @@
     <header class="flex justify-between items-center p-6 bg-opacity-50 relative z-20">
         <div class="flex items-center space-x-3">
             <img src="@/assets/Logo.png" alt="Logo" class="w-10 h-10">
-            <span class="text-white text-3xl font-bold">Soowe</span>
+            <span class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary" >Soowe</span>
         </div>
         <button type="button" class="block focus:outline-none md:hidden"
         @click="isMenuOpen = !isMenuOpen">
