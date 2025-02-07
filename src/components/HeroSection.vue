@@ -10,9 +10,9 @@
           <div class="lg:py-6 flex flex-col justify-center h-full">
             <div class="text-center lg:text-left">
               <h1 class="pt-4 text-white font-bold text-4xl md:text-5xl lg:text-6xl">
-                Conecta con asistentes médicos en cualquier momento con 
+                ¿Qué es
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">
-                  Soowe
+                  Soowe?
                 </span> 👩‍⚕️
               </h1>
             </div>
@@ -23,7 +23,8 @@
               </div>
             </div>
             <p class="text-gray-300 pt-8 text-center lg:text-left mx-auto max-w-xl">
-              ¿Cansado de no saber a quién acudir cuando tienes una urgencia? ¿Las recomendaciones que obtienes no son seguras? Con Soowe te ahorras malos entendidos y encuentras la atención que necesitas en cortos periodos de tiempo.
+              "¿No sabes a quién acudir en una emergencia?
+Con Soowe, tienes acceso inmediato a asistentes médicos las 24 horas del día, directamente desde tu celular. Porque tu salud es lo más importante, y estar acompañado en los momentos críticos no debería ser un lujo."
             </p>
             <div class="flex items-center gap-3 pt-9 flex-col sm:flex-row sm:w-max sm:mx-auto lg:mx-0">
               <button class="px-6 md:px-7 py-3 rounded-full relative group w-full sm:w-max flex justify-center">
