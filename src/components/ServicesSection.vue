@@ -1,7 +1,7 @@
 <template >
     <section class="text-white mt-20" id="services">
         <div class="px-4 xl:pl-16">
-            <h2 class="text-4xl font-bold text-white mb-4">Nuestros servicios</h2>
+            <h2 class="text-4xl font-bold text-white mb-4">Algunos de nuestros servicios disponibles</h2>
         </div>
         <div class="py-8 xl:px-16 px-4 sm:py-16 grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 md:gap-10 md:pt-12 lg:grid-cols-3">
             <div v-for="service in services" :key="service.id" data-aos="fade-up"
@@ -29,43 +29,46 @@ import {ref} from 'vue';
 import inyeccionImg from '@/assets/inyeccion.png';
 import monitoreoImg from '@/assets/monitoreo.png';
 import lesionesImg from '@/assets/esguince.png';
+import signosvitalesImg from '@/assets/signosvitales.png';
+import recetamedicaImg from '@/assets/recetamedica.png';
+import silladeruedasImg from '@/assets/silladeruedas.png'
 const services =ref([
     {
         
         id:1,
         icon:inyeccionImg,
         name:'Inyecciones',
-        description:'¿No saber a quien recurrir para una simple inyección?'
+        description:'Administración segura de inyecciones según indicación médica.'
     },
     {
         id:2,
         icon:monitoreoImg,
-        name:'Monitoreo',
-        description:'Asistentes médicos asisten a tu domicilio para chequeo médico'
+        name:'Monitoreo post operación',
+        description:'Asistentes médicos acuden a tu domicilio para atención periódica.'
     },
     {
         id:3,
         icon:lesionesImg,
-        name:'Lesiones',
-        description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
+        name:'Curación de heridas',
+        description:'Limpieza, desinfección y vendaje de heridas que requieren atención periódica.'
     },
     {
         id:4,
-        icon:'https://img.icons8.com/ios-filled/100/ffffff/email-open.png',
-        name:'WEB DEVELOPMENT',
-        description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
+        icon:signosvitalesImg,
+        name:'Toma de signos vitales',
+        description:'Chequeo de presión arterial, frecuencia cardíaca, temperatura y saturación de oxígeno.',
     },
     {
         id:5,
-        icon:'https://img.icons8.com/ios-filled/100/ffffff/windows10-personalization.png',
-        name:'Graphic Design',
-        description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
+        icon:recetamedicaImg,
+        name:'Monitoreo de enfermededes crónicas',
+        description:'Control y monitoreo de enfermedades como diabetes, hipertensión, EPOC.'
     },
     {
         id:6,
-        icon:'https://img.icons8.com/ios-filled/100/ffffff/web-design.png',
-        name:'Web Design',
-        description:'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, ut!'
+        icon:silladeruedasImg,
+        name:'Rehabilitación y movilidad',
+        description:'Ejercicios guiados para mejorar la movilidad y fortalecer músculos en pacientes con limitaciones físicas.'
     },
     ])
 </script>
