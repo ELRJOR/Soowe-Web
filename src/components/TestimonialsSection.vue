@@ -1,6 +1,6 @@
 <template >
     <section class="text-white mt-20" id="testimonials" data-aos="zoom-in">
-        <h2 class="text-4xl font-bold text-white text-left mb-4 px-4 xl:pl-16">Testimonials</h2>
+        <h2 class="text-4xl font-bold text-white text-left mb-4 px-4 xl:pl-16">Testimonios</h2>
         <div class="px-4 xl:px-16">
             <Carousel v-bind="settings" :breakpoints="breakpoints" >
                 <Slide v-for="element in testimonials" :key="element.id">
@@ -54,33 +54,33 @@ const breakpoints =ref({
 const testimonials=ref([
     {
         id:1,
-        fullName:'client 1',
+        fullName:'Ana Rodríguez – Cliente satisfecho',
         image:'src/assets/image.png',
-        comment:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam minima reprehenderit maiores itaque molestiae optio, voluptatibus iusto eos doloremque consectetur!'
+        comment:'Soowe ha sido una bendición para mi familia. Necesitábamos asistencia médica para mi madre y en pocos minutos pudimos encontrar un enfermero calificado y confiable. La plataforma es fácil de usar y la atención ha sido excelente. ¡100% recomendado!'
     },
     {
         id:2,
-        fullName:'client 2',
+        fullName:'Juan Pérez – Usuario recurrente',
         image:'src/assets/image.png',
-        comment:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam minima reprehenderit maiores itaque molestiae optio, voluptatibus iusto eos doloremque consectetur!'
+        comment:'Nunca imaginé que encontrar atención médica en casa sería tan fácil. La aplicación me permitió solicitar un asistente médico en cuestión de minutos. Me encanta la seguridad y profesionalismo del servicio. Soowe realmente facilita la vida.'
     },
     {
         id:3,
-        fullName:'client 3',
+        fullName:'Mariana López – Atención rápida y eficaz',
         image:'src/assets/image.png',
-        comment:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam minima reprehenderit maiores itaque molestiae optio, voluptatibus iusto eos doloremque consectetur!'
+        comment:'Tuve una emergencia con mi hijo y necesitaba asistencia urgente. Gracias a Soowe, en menos de 30 minutos ya teníamos un profesional en casa. La rapidez y la calidad del servicio son inmejorables. ¡Gracias por ayudarnos en momentos clave!'
     },
     {
         id:4,
-        fullName:'client 4',
+        fullName:'Ricardo Méndez – Atención de calidad',
         image:'src/assets/image.png',
-        comment:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam minima reprehenderit maiores itaque molestiae optio, voluptatibus iusto eos doloremque consectetur!'
+        comment:'Soowe me ha dado tranquilidad al saber que puedo solicitar asistencia médica confiable para mis padres mayores. Todos los enfermeros han sido amables, puntuales y altamente capacitados. Es una gran solución para quienes buscamos atención personalizada en casa.'
     },
     {
         id:5,
-        fullName:'client 5',
+        fullName:'Laura Fernández – Confianza y profesionalismo',
         image:'src/assets/image.png',
-        comment:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam minima reprehenderit maiores itaque molestiae optio, voluptatibus iusto eos doloremque consectetur!'
+        comment:'Desde que descubrí Soowe, mi experiencia buscando asistencia médica ha cambiado por completo. El proceso es rápido, seguro y con profesionales altamente capacitados. Me da mucha tranquilidad saber que siempre contaré con un servicio confiable cuando lo necesite.'
     },
 ])
 </script>

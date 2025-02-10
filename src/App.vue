@@ -9,7 +9,7 @@
             <HeroSection />
             <ServicesSection />
             <AboutSection />
-            <ExperienceAndSkills />
+            <CollectionPlans />
             <LatestProjSection />
             <ContactSection />
             <TestimonialsSection />
@@ -35,12 +35,11 @@ const ServicesSection = defineAsyncComponent(()=>import('@/components/ServicesSe
 const AboutSection = defineAsyncComponent(()=>import('@/components/AboutSection.vue'));
 const TestimonialsSection = defineAsyncComponent(()=>import('@/components/TestimonialsSection.vue'));
 const LatestProjSection = defineAsyncComponent(()=>import('@/components/LatestProjSection.vue'));
-const ExperienceAndSkills = defineAsyncComponent(()=>import('@/components/ExperienceAndSkills.vue'));
+const CollectionPlans = defineAsyncComponent(()=>import('@/components/CollectionPlans.vue'));
 const ContactSection = defineAsyncComponent(()=>import('@/components/ContactSection.vue'));
 const Footer = defineAsyncComponent(()=>import('@/components/Footer.vue'));
 const BackToTop = defineAsyncComponent(()=>import('@/components/BackToTop.vue'));
-import loadingSpinner from './components/loadingSpinner.vue';
-</script>
+import loadingSpinner from './components/loadingSpinner.vue';</script>
 <style>
 
 *{
