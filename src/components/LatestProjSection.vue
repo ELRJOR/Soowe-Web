@@ -69,7 +69,7 @@ const Projects = ref([
     {
         id: 1,
         category: 'Salud',
-        image: 'src/assets/hospital1.jpg',
+        image: 'src/assets/AltaEspecialidadMerida.jpg',
         title: 'Hospital Regional de Alta Especialidad de la Península de Yucatán',
         description: 'Brinda atención médica especializada con asistentes médicos y tecnología de vanguardia.',
         technologies: ['Cardiología', 'Neurología', 'Medicina Interna'],
@@ -78,7 +78,7 @@ const Projects = ref([
     {
         id: 2,
         category: 'Salud',
-        image: 'src/assets/clinica1.jpg',
+        image: 'src/assets/ClinicaMerida.jpeg',
         title: 'Clínica de Mérida',
         description: 'Atención médica integral con un equipo de especialistas y asistentes médicos certificados.',
         technologies: ['Urgencias', 'Pediatría', 'Cirugía'],
@@ -87,7 +87,7 @@ const Projects = ref([
     {
         id: 3,
         category: 'Salud',
-        image: 'src/assets/hospital2.jpg',
+        image: 'src/assets/Starmedica.webp',
         title: 'Star Médica Mérida',
         description: 'Hospital privado con asistencia médica en diversas especialidades y atención personalizada.',
         technologies: ['Ginecología', 'Oncología', 'Ortopedia'],
@@ -96,7 +96,7 @@ const Projects = ref([
     {
         id: 4,
         category: 'Salud',
-        image: 'src/assets/clinica2.jpg',
+        image: 'src/assets/pensiones.jpg',
         title: 'Centro Médico Pensiones',
         description: 'Clínica con amplia gama de servicios médicos y asistentes disponibles 24/7.',
         technologies: ['Medicina General', 'Oftalmología', 'Traumatología'],
