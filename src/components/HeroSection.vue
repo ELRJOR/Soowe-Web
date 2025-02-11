@@ -26,14 +26,6 @@
               "¿No sabes a quién acudir en una emergencia?
 Con Soowe, tienes acceso inmediato a asistentes médicos las 24 horas del día, directamente desde tu celular. Porque tu salud es lo más importante, y estar acompañado en los momentos críticos no debería ser un lujo."
             </p>
-            <div class="flex items-center gap-3 pt-9 flex-col sm:flex-row sm:w-max sm:mx-auto lg:mx-0">
-              <button class="px-6 md:px-7 py-3 rounded-full relative group w-full sm:w-max flex justify-center">
-                <span class="absolute inset-0 rounded-3xl group-hover:scale-105 origin-center transition-all ease-in-out bg-primary border-2 border-transparent"></span>
-                <span class="relative flex items-center justify-center text-white">
-                  Empezar ahora
-                </span>
-              </button>
-            </div>
           </div>
           <!-- Imagen para escritorio: se muestra en pantallas grandes -->
           <div class="hidden lg:flex lg:h-full md:flex justify-center items-center">

@@ -3,22 +3,12 @@
         <div class="px-4 xl:pl-16">
             <div class="mb-4 md:flex md:justify-between xl:pr-16">
                 <h2 class="text-4xl font-bold text-white">Organizaciones</h2>
-                <div class="flex space-x-4 mb-4 mt-5 md:mt-0">
-                    <button 
-                        class="hover:text-primary px-4 py-2 border border-gray-600 rounded-md transition-all duration-300"
-                        v-for="category in ['all', 'Salud']" 
-                        :key="category" 
-                        @click="selectedCategory = category"
-                        :class="{ 'bg-primary text-black': selectedCategory === category }">
-                        {{ category }}
-                    </button>
-                </div>
             </div>
 
             <!-- Grid de Proyectos -->
             <ul class="px-4 sm:py-16 xl:pr-16 grid grid-cols-1 gap-6 pt-10 sm:grid-cols-2 md:gap-10 md:pt-12 lg:grid-cols-3"
                 data-aos="fade-right">
-                <div v-for="project in filteredProjects" :key="project.id" class="flex flex-col h-full">
+                <div v-for="project in Projects" :key="project.id" class="flex flex-col h-full">
                     <div class="h-52 md:h-64 rounded-t-xl relative group bg-cover bg-center"
                         :style="{ backgroundImage: 'url(' + project.image + ')' }">
                         <div class="overlay flex items-center justify-center absolute top-0 left-0 w-full h-full bg-[#181818] bg-opacity-0 hidden group-hover:flex group-hover:bg-opacity-80 transition-all duration-500">
@@ -46,24 +36,11 @@
                 </div>
             </ul>
         </div>
-
-        <!-- Sección de Organizaciones -->
-        <div class="mt-20 px-4 xl:pl-16">
-            <h2 class="text-4xl font-bold text-white">Empresas que trabajan con nosotros</h2>
-            <ul class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <li v-for="organization in Organizations" :key="organization.id" 
-                    class="bg-[#1c1c3a] p-6 rounded-lg shadow-lg text-center h-full flex flex-col items-center">
-                    <img :src="organization.logo" :alt="organization.name" class="w-24 h-24 mx-auto mb-4 object-contain">
-                    <h3 class="text-xl font-semibold">{{ organization.name }}</h3>
-                    <p class="text-[#ADB7BE] flex-grow">{{ organization.description }}</p>
-                </li>
-            </ul>
-        </div>
     </section>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 const Projects = ref([
     {
@@ -103,31 +80,4 @@ const Projects = ref([
         webURL: 'https://www.cmpmerida.com.mx'
     },
 ]);
-
-const Organizations = ref([
-    {
-        id: 1,
-        logo: 'src/assets/org1.png',
-        name: 'IMSS Yucatán',
-        description: 'Provee servicios de salud y asistencia médica con profesionales capacitados.'
-    },
-    {
-        id: 2,
-        logo: 'src/assets/org2.png',
-        name: 'Hospital O\'Horán',
-        description: 'Atención médica de calidad con especialistas y asistentes médicos.'
-    },
-    {
-        id: 3,
-        logo: 'src/assets/org3.png',
-        name: 'Red Médica del Sureste',
-        description: 'Grupo de hospitales y clínicas con asistencia médica integral.'
-    }
-]);
-
-const selectedCategory = ref('all');
-const filteredProjects = computed(() => {
-    return selectedCategory.value === 'all' ? Projects.value : 
-        Projects.value.filter(project => project.category.toLowerCase() === selectedCategory.value.toLowerCase());
-});
 </script>

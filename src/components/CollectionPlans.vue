@@ -15,7 +15,8 @@
                     Ofrecemos diferentes modelos de pago para adaptarnos a las necesidades de cada organización.  
                 </p>
                 <ul class="mt-6 space-y-4">
-                    <li v-for="plan in Pricing" :key="plan.id" class="bg-[#111a3e] p-4 rounded-xl border border-[#1f1641]">
+                    <!-- Se ha modificado 'relative top-8' por 'relative -top-4' para subir la tarjeta -->
+                    <li v-for="plan in Pricing" :key="plan.id" class="bg-[#111a3e] p-4 rounded-xl border border-[#1f1641] relative -top-4">
                         <h3 class="text-xl font-bold text-white">{{ plan.name }}</h3>
                         <p class="text-gray-300">{{ plan.description }}</p>
                         <h4 class="text-lg font-semibold text-primary mt-2">{{ plan.price }}</h4>
@@ -28,7 +29,7 @@
                 </h2>
                 <ul class="space-y-6 py-8" data-aos="fade-left">
                     <li v-for="benefit in Benefits" :key="benefit.id"
-                    class="flex items-center rounded-xl p-4 bg-[#111a3e] shadow-lg border border-[#1f1641]">
+                        class="flex items-center rounded-xl p-4 bg-[#111a3e] shadow-lg border border-[#1f1641]">
                         <div class="w-1/4">
                             <img :src="benefit.icon" :alt="benefit.name">
                         </div>
@@ -53,18 +54,6 @@ const Pricing = ref([
         description: "Accede a todas las funciones con un pago fijo al mes.",
         price: "$399.0/mes",
     },
-    {
-        id: 2,
-        name: "Comisión por Uso",
-        description: "Paga un pequeño porcentaje solo cuando realices transacciones.",
-        price: "5% por transacción",
-    },
-    {
-        id: 3,
-        name: "Planes Personalizados",
-        description: "Opciones de pago flexibles para empresas con necesidades específicas.",
-        price: "Cotización personalizada",
-    },
 ]);
 
 const Benefits = ref([
@@ -88,3 +77,4 @@ const Benefits = ref([
     },
 ]);
 </script>
+/
