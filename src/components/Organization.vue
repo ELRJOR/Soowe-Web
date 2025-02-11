@@ -50,7 +50,7 @@ const Projects = ref([
         title: 'Hospital Regional de Alta Especialidad de la Península de Yucatán',
         description: 'Brinda atención médica especializada con asistentes médicos y tecnología de vanguardia.',
         technologies: ['Cardiología', 'Neurología', 'Medicina Interna'],
-        webURL: 'https://www.hraepy.gob.mx'
+        webURL: 'https://www.gob.mx/salud/hraepy/'
     },
     {
         id: 2,
@@ -68,7 +68,7 @@ const Projects = ref([
         title: 'Star Médica Mérida',
         description: 'Hospital privado con asistencia médica en diversas especialidades y atención personalizada.',
         technologies: ['Ginecología', 'Oncología', 'Ortopedia'],
-        webURL: 'https://www.starmedica.com/merida'
+        webURL: 'https://www.starmedica.com/s/'
     },
     {
         id: 4,
@@ -77,7 +77,7 @@ const Projects = ref([
         title: 'Centro Médico Pensiones',
         description: 'Clínica con amplia gama de servicios médicos y asistentes disponibles 24/7.',
         technologies: ['Medicina General', 'Oftalmología', 'Traumatología'],
-        webURL: 'https://www.cmpmerida.com.mx'
+        webURL: 'https://centromedicopensiones.net/'
     },
 ]);
 </script>

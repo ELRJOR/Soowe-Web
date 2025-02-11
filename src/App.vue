@@ -10,7 +10,7 @@
             <ServicesSection />
             <AboutSection />
             <CollectionPlans />
-            <LatestProjSection />
+            <Organization />
             <ContactSection />
             <TestimonialsSection />
             <Footer />
@@ -34,12 +34,13 @@ const HeroSection = defineAsyncComponent(()=>import('@/components/HeroSection.vu
 const ServicesSection = defineAsyncComponent(()=>import('@/components/ServicesSection.vue'));
 const AboutSection = defineAsyncComponent(()=>import('@/components/AboutSection.vue'));
 const TestimonialsSection = defineAsyncComponent(()=>import('@/components/TestimonialsSection.vue'));
-const LatestProjSection = defineAsyncComponent(()=>import('@/components/LatestProjSection.vue'));
+const LatestProjSection = defineAsyncComponent(()=>import('@/components/Organization.vue'));
 const CollectionPlans = defineAsyncComponent(()=>import('@/components/CollectionPlans.vue'));
 const ContactSection = defineAsyncComponent(()=>import('@/components/ContactSection.vue'));
 const Footer = defineAsyncComponent(()=>import('@/components/Footer.vue'));
 const BackToTop = defineAsyncComponent(()=>import('@/components/BackToTop.vue'));
-import loadingSpinner from './components/loadingSpinner.vue';</script>
+import loadingSpinner from './components/loadingSpinner.vue';import Organization from './components/Organization.vue';
+</script>
 <style>
 
 *{
