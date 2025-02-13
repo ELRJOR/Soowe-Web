@@ -1,7 +1,7 @@
 <template>
   <section class="relative bg-gradient-to-r from-indigo-900 to-indigo-700 text-white py-32 px-6">
     <!-- Imagen de fondo con opacidad -->
-    <div class="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('src/assets/AppstoreFondo.jpg');">
+    <div class="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0" :style="{ backgroundImage: `url(${fondo})` }">
       <!-- Capa de opacidad encima de la imagen -->
       <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 z-10"></div>
     </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script setup>
+import fondo from '@/assets/AppstoreFondo.jpg'
 </script>
 
 <style scoped>
