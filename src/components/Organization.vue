@@ -40,13 +40,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
+
+// Importar las imágenes desde la carpeta assets
+import AltaEspecialidadMerida from '@/assets/AltaEspecialidadMerida.jpg'
+import ClinicaMerida from '@/assets/ClinicaMerida.jpeg'
+import Starmedica from '@/assets/Starmedica.webp'
+import Pensiones from '@/assets/pensiones.jpg'
 
 const Projects = ref([
     {
         id: 1,
         category: 'Salud',
-        image: 'src/assets/AltaEspecialidadMerida.jpg',
+        image: AltaEspecialidadMerida, 
         title: 'Hospital Regional de Alta Especialidad de la Península de Yucatán',
         description: 'Brinda atención médica especializada con asistentes médicos y tecnología de vanguardia.',
         technologies: ['Cardiología', 'Neurología', 'Medicina Interna'],
@@ -55,7 +61,7 @@ const Projects = ref([
     {
         id: 2,
         category: 'Salud',
-        image: 'src/assets/ClinicaMerida.jpeg',
+        image: ClinicaMerida, 
         title: 'Clínica de Mérida',
         description: 'Atención médica integral con un equipo de especialistas y asistentes médicos certificados.',
         technologies: ['Urgencias', 'Pediatría', 'Cirugía'],
@@ -64,7 +70,7 @@ const Projects = ref([
     {
         id: 3,
         category: 'Salud',
-        image: 'src/assets/Starmedica.webp',
+        image: Starmedica, 
         title: 'Star Médica Mérida',
         description: 'Hospital privado con asistencia médica en diversas especialidades y atención personalizada.',
         technologies: ['Ginecología', 'Oncología', 'Ortopedia'],
@@ -73,7 +79,7 @@ const Projects = ref([
     {
         id: 4,
         category: 'Salud',
-        image: 'src/assets/pensiones.jpg',
+        image: Pensiones, 
         title: 'Centro Médico Pensiones',
         description: 'Clínica con amplia gama de servicios médicos y asistentes disponibles 24/7.',
         technologies: ['Medicina General', 'Oftalmología', 'Traumatología'],
