@@ -59,7 +59,7 @@ const testimonials = ref([
         id: 1,
         fullName: 'Ana Rodríguez – Cliente satisfecho',
         image: 'src/assets/Persona3.jpg',
-        comment: 'Soowe ha sido una bendición para mi familia. Necesitábamos asistencia médica para mi madre y en pocos minutos pudimos encontrar un enfermero calificado y confiable. La plataforma es fácil de usar y la atención ha sido excelente. ¡100% recomendado!, descarguenlo'
+        comment: 'Soowe ha sido una bendición para mi familia. Necesitábamos asistencia médica para mi madre y en pocos minutos pudimos encontrar un enfermero calificado y confiable. La plataforma es fácil de usar y la atención ha sido excelente. ¡100% recomendado!, descarguenlo.'
     },
     {
         id: 2,
