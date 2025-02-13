@@ -1,11 +1,11 @@
 <template>
-    <footer class="mt-8 border-t border-[#33353F] text-white bg-[#111827]">
+    <footer class="mt-8 border-t border-white text-white bg-black">
         <div class="container mx-auto px-6 py-12">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <!-- Logo -->
                 <div class="flex items-center space-x-4">
                     <img src="@/assets/Logo.png" alt="Logo" class="w-16 h-16">
-                    <h2 class="text-2xl font-bold">Soowe</h2>
+                    <h2 class="text-2xl font-bold text-white">Soowe</h2>
                 </div>
 
                 <!-- Enlaces rápidos -->

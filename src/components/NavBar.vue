@@ -2,7 +2,7 @@
     <header class="flex justify-between items-center p-6 bg-opacity-50 relative z-20">
         <div class="flex items-center space-x-3">
             <img src="@/assets/Logo.png" alt="Logo" class="w-10 h-10">
-            <span class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">Soowe</span>
+            <span class="text-3xl font-bold text-primary">Soowe</span>
         </div>
 
         <!-- Botón de hamburguesa -->
@@ -24,7 +24,7 @@
             <ul class="flex flex-col items-center space-y-5 md:flex-row md:space-x-5 md:space-y-0">
                 <li v-for="item in Menu" :key="item.name">
                     <a :href="item.href" 
-                    class="block text-white transition hover:text-primary ease-linear text-2xl md:text-lg"
+                    class="block text-primary font-bold transition hover:text-titles ease-linear text-2xl md:text-lg"
                     @click="scrollToSection(item.href)">
                         {{ item.name }}
                     </a>
@@ -38,7 +38,6 @@
 import { ref } from 'vue';
 
 const Menu = ref([
-    { name: 'Registrarse', href: '#registrarse' },
     { name: 'Iniciar Sesión', href: '#iniciarsesion' },
 ]);
 

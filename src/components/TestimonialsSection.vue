@@ -5,18 +5,18 @@
             <Carousel v-bind="settings" :breakpoints="breakpoints">
                 <Slide v-for="element in testimonials" :key="element.id">
                     <div class="carousel__item p-4">
-                        <div class="testimonial-card w-full mx-auto bg-[#111a3e] shadow-lg border border-[#1f1641] p-5 text-white font-light">
+                        <div class="testimonial-card w-full mx-auto bg-[white] shadow-lg border border-[black] p-5 text-primary font-semibold">
                             <div class="w-full flex mb-4 items-center">
                                 <div class="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
                                     <img :src="element.image" alt="testimonial image" loading="lazy" class="testimonial-image">
                                 </div>
-                                <h6 class="ml-4 font-bold text-sm uppercase text-white">{{ element.fullName }}</h6>
+                                <h6 class="ml-4 font-bold text-sm uppercase text-black">{{ element.fullName }}</h6>
                             </div>
                             <div class="w-full flex-grow">
                                 <p class="text-sm leading-tight">
-                                    <span class="text-lg leading-none italic font-bold text-white mr-1">"</span>
+                                    <span class="text-lg leading-none italic font-bold text-black mr-1">"</span>
                                     {{ element.comment }}
-                                    <span class="text-lg leading-none italic font-bold text-white mr-1">"</span>
+                                    <span class="text-lg leading-none italic font-bold text-black mr-1">"</span>
                                 </p>
                             </div>
                         </div>
@@ -59,7 +59,7 @@ const testimonials = ref([
         id: 1,
         fullName: 'Ana Rodríguez – Cliente satisfecho',
         image: 'src/assets/Persona3.jpg',
-        comment: 'Soowe ha sido una bendición para mi familia. Necesitábamos asistencia médica para mi madre y en pocos minutos pudimos encontrar un enfermero calificado y confiable. La plataforma es fácil de usar y la atención ha sido excelente. ¡100% recomendado!'
+        comment: 'Soowe ha sido una bendición para mi familia. Necesitábamos asistencia médica para mi madre y en pocos minutos pudimos encontrar un enfermero calificado y confiable. La plataforma es fácil de usar y la atención ha sido excelente. ¡100% recomendado!, descarguenlo'
     },
     {
         id: 2,
@@ -92,7 +92,7 @@ const testimonials = ref([
 /* Estilos de las flechas de navegación */
 .carousel__prev,
 .carousel__next {
-    color: white !important;
+    color: black !important;
 }
 
 /* Asegurar que las tarjetas tengan el mismo tamaño */

@@ -2,7 +2,7 @@
     <section class="text-white mt-20" id="projects">
         <div class="px-4 xl:pl-16">
             <div class="mb-4 md:flex md:justify-between xl:pr-16">
-                <h2 class="text-4xl font-bold text-white">Organizaciones</h2>
+                <h2 class="text-4xl font-bold text-black">Organizaciones</h2>
             </div>
 
             <!-- Grid de Proyectos -->
@@ -23,12 +23,12 @@
                             </a>
                         </div>
                     </div>
-                    <div class="text-white rounded-b-xl bg-[#111a3e] shadow-lg border border-[#1f1641] p-6 flex flex-col flex-grow">
+                    <div class="text-black font-semibold rounded-b-xl bg-[white] shadow-lg border border-[#1f1641] p-6 flex flex-col flex-grow">
                         <h3 class="text-lg font-semibold uppercase lg:text-xl">{{ project.title }}</h3>
-                        <p class="text-[#ADB7BE] flex-grow">{{ project.description }}</p>
+                        <p class="text-primary font-semibold flex-grow">{{ project.description }}</p>
                         <div class="flex flex-wrap p-2.5">
                             <div v-for="technology in project.technologies" :key="technology"
-                                class="text-center ml-1 mt-1 rounded-3xl bg-[#111827] px-3 py-1 text-sm">
+                                class="text-center ml-1 mt-1 rounded-3xl bg-white px-3 py-1 text-sm border border-black">
                                 {{ technology }}
                             </div>
                         </div>

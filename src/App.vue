@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#111827] min-h-screen">
+  <div class="bg-[#FFFFFF] min-h-screen">
     <!-- Wrap components in Suspense to handle loading -->
      <Suspense>
       <template #default>
@@ -8,6 +8,7 @@
             <NavBar />
             <HeroSection />
             <ServicesSection />
+            <Playstoresection />
             <AboutSection />
             <CollectionPlans />
             <Organization />
@@ -34,12 +35,12 @@ const HeroSection = defineAsyncComponent(()=>import('@/components/HeroSection.vu
 const ServicesSection = defineAsyncComponent(()=>import('@/components/ServicesSection.vue'));
 const AboutSection = defineAsyncComponent(()=>import('@/components/AboutSection.vue'));
 const TestimonialsSection = defineAsyncComponent(()=>import('@/components/TestimonialsSection.vue'));
-const LatestProjSection = defineAsyncComponent(()=>import('@/components/Organization.vue'));
+const Organization = defineAsyncComponent(()=>import('@/components/Organization.vue'));
 const CollectionPlans = defineAsyncComponent(()=>import('@/components/CollectionPlans.vue'));
 const ContactSection = defineAsyncComponent(()=>import('@/components/ContactSection.vue'));
+const Playstoresection = defineAsyncComponent(()=>import('@/components/Playstoresection.vue'));
 const Footer = defineAsyncComponent(()=>import('@/components/Footer.vue'));
 const BackToTop = defineAsyncComponent(()=>import('@/components/BackToTop.vue'));
-import loadingSpinner from './components/loadingSpinner.vue';import Organization from './components/Organization.vue';
 </script>
 <style>
 
