@@ -38,7 +38,7 @@
 import { ref } from 'vue';
 
 const Menu = ref([
-    { name: 'Iniciar Sesión', href: '#iniciarsesion' },
+    { name: 'Ingresar', href: '#iniciarsesion' },
 ]);
 
 const isMenuOpen = ref(false);
