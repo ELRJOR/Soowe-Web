@@ -1,8 +1,8 @@
 <template>
   <section class="relative w-full h-[calc(100vh-80px)] flex items-center justify-center" data-aos="zoom-in-up">
     <!-- Capa de fondo con la imagen -->
-    <div class="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0" 
-         style="background-image: url('src/assets/Medico.jpg'); background-position: center 20%;">
+    <div class="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0"
+     style="background-image: url('/images/Medico.jpg'); background-position: center 20%;">
       <!-- Capa azul transparente encima de la imagen -->
       <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 z-10"></div>
     </div>
