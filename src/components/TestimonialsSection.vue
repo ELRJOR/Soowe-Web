@@ -35,6 +35,12 @@ import { ref } from 'vue';
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 
+import Persona1 from '@/assets/Persona1.jpg';
+import Persona2 from '@/assets/Persona2.jpg';
+import Persona3 from '@/assets/Persona3.jpg';
+import Persona4 from '@/assets/Persona4.webp';
+import Persona5 from '@/assets/Persona5.jpg';
+
 // Carousel settings
 const settings = ref({
     itemsToShow: 1,
@@ -58,31 +64,31 @@ const testimonials = ref([
     {
         id: 1,
         fullName: 'Ana Rodríguez – Cliente satisfecho',
-        image: 'src/assets/Persona3.jpg',
+        image: Persona3,
         comment: 'Soowe ha sido una bendición para mi familia. Necesitábamos asistencia médica para mi madre y en pocos minutos pudimos encontrar un enfermero calificado y confiable. La plataforma es fácil de usar y la atención ha sido excelente. ¡100% recomendado!, descarguenlo.'
     },
     {
         id: 2,
         fullName: 'Juan Pérez – Usuario recurrente',
-        image: 'src/assets/Persona2.jpg',
+        image: Persona2,
         comment: 'Nunca imaginé que encontrar atención médica en casa sería tan fácil. La aplicación me permitió solicitar un asistente médico en cuestión de minutos. Me encanta la seguridad y profesionalismo del servicio. Soowe realmente facilita la vida.'
     },
     {
         id: 3,
         fullName: 'Mariana López – Atención rápida y eficaz',
-        image: 'src/assets/Persona4.webp',
+        image: Persona4,
         comment: 'Tuve una emergencia con mi hijo y necesitaba asistencia urgente. Gracias a Soowe, en menos de 30 minutos ya teníamos un profesional en casa. La rapidez y la calidad del servicio son inmejorables. ¡Gracias por ayudarnos en momentos clave!'
     },
     {
         id: 4,
         fullName: 'Ricardo Méndez – Atención de calidad',
-        image: 'src/assets/Persona1.jpg',
+        image: Persona1,
         comment: 'Soowe me ha dado tranquilidad al saber que puedo solicitar asistencia médica confiable para mis padres mayores. Todos los enfermeros han sido amables, puntuales y altamente capacitados. Es una gran solución para quienes buscamos atención personalizada en casa.'
     },
     {
         id: 5,
         fullName: 'Laura Fernández – Confianza y profesionalismo',
-        image: 'src/assets/Persona5.jpg',
+        image: Persona5,
         comment: 'Desde que descubrí Soowe, mi experiencia buscando asistencia médica ha cambiado por completo. El proceso es rápido, seguro y con profesionales altamente capacitados. Me da mucha tranquilidad saber que siempre contaré con un servicio confiable cuando lo necesite.'
     },
 ]);
