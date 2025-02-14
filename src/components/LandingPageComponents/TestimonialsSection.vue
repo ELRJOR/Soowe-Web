@@ -5,10 +5,10 @@
             <Carousel v-bind="settings" :breakpoints="breakpoints">
                 <Slide v-for="element in testimonials" :key="element.id">
                     <div class="carousel__item p-4">
-                        <div class="testimonial-card w-full mx-auto bg-white shadow-lg border border-black p-5 text-primary font-semibold">
+                        <div class="testimonial-card w-full mx-auto bg-[white] shadow-lg border border-[black] p-5 text-primary font-semibold">
                             <div class="w-full flex mb-4 items-center">
                                 <div class="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
-                                    <img :src="element.image" :alt="`Foto de ${element.fullName}`" loading="lazy" class="testimonial-image">
+                                    <img :src="element.image" alt="testimonial image" loading="lazy" class="testimonial-image">
                                 </div>
                                 <h6 class="ml-4 font-bold text-sm uppercase text-black">{{ element.fullName }}</h6>
                             </div>
@@ -23,7 +23,7 @@
                     </div>
                 </Slide>
                 <template #addons>
-                    <Navigation aria-label="Controles del carrusel" />
+                    <Navigation />
                 </template>
             </Carousel>
         </div>
@@ -41,14 +41,14 @@ import Persona3 from '@/assets/Persona3.jpg';
 import Persona4 from '@/assets/Persona4.webp';
 import Persona5 from '@/assets/Persona5.jpg';
 
-// Configuración del carrusel
-const settings = {
+// Carousel settings
+const settings = ref({
     itemsToShow: 1,
     snapAlign: "center",
-};
+});
 
-// Puntos de quiebre para diseño responsivo
-const breakpoints = {
+// Breakpoints para diferentes tamaños de pantalla
+const breakpoints = ref({
     700: {
         itemsToShow: 2,
         snapAlign: 'center',
@@ -57,7 +57,7 @@ const breakpoints = {
         itemsToShow: 3,
         snapAlign: 'start'
     }
-};
+});
 
 // Datos de testimonios
 const testimonials = ref([
@@ -106,6 +106,7 @@ const testimonials = ref([
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
 }
 
 /* Asegurar que todas las tarjetas sean del mismo tamaño */
@@ -113,6 +114,7 @@ const testimonials = ref([
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
     min-height: 250px;
 }
 
