@@ -6,14 +6,15 @@
         </div>
 
         <!-- Botón de hamburguesa -->
-        <button type="button" class="block focus:outline-none md:hidden z-30" @click="isMenuOpen = !isMenuOpen">
-            <img v-if="isMenuOpen" src="https://img.icons8.com/ios-filled/100/ffffff/delete-sign.png" alt="close" width="40" height="40">
-            <img v-else src="https://img.icons8.com/ios-filled/100/ffffff/menu--v6.png" alt="menu" width="40" height="40">
+        <button type="button" class="block focus:outline-none md:hidden z-30" 
+        @click="toggleMenu">
+        <img v-if="isMenuOpen" src="https://img.icons8.com/ios-filled/100/0/0/0/delete-sign.png" alt="close" width="40" height="40">
+        <img v-else src="https://img.icons8.com/ios-filled/100/0/0/0/menu--v6.png" alt="menu" width="40" height="40">
         </button>
 
         <!-- Menú desplegable -->
         <nav 
-            :class="['fixed inset-0 z-20 flex flex-col items-center justify-center bg-[#111827] md:relative md:bg-transparent md:flex md:justify-between md:flex-row transition-all duration-300', 
+            :class="['fixed inset-0 z-20 flex flex-col items-center justify-center bg-[white] md:relative md:bg-transparent md:flex md:justify-between md:flex-row transition-all duration-300', 
             isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible md:visible md:opacity-100']">
             
             <!-- Botón de cierre dentro del menú -->
@@ -50,4 +51,10 @@ const scrollToSection = (href) => {
         section.scrollIntoView({ behavior: "smooth" });
     }
 };
+
+const toggleMenu = () => {
+    isMenuOpen.value = !isMenuOpen.value;
+    document.body.style.overflow = isMenuOpen.value ? 'hidden' : 'auto';
+};
+
 </script>

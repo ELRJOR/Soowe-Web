@@ -1,14 +1,14 @@
 <template>
     <section class="text-white mt-20" id="testimonials" data-aos="zoom-in">
-        <h2 class="text-4xl font-bold text-white text-left mb-4 px-4 xl:pl-16">Testimonios</h2>
+        <h2 class="text-4xl font-bold text-black text-left mb-4 px-4 xl:pl-16">Testimonios</h2>
         <div class="px-4 xl:px-16">
             <Carousel v-bind="settings" :breakpoints="breakpoints">
                 <Slide v-for="element in testimonials" :key="element.id">
                     <div class="carousel__item p-4">
-                        <div class="testimonial-card w-full mx-auto bg-[white] shadow-lg border border-[black] p-5 text-primary font-semibold">
+                        <div class="testimonial-card w-full mx-auto bg-white shadow-lg border border-black p-5 text-primary font-semibold">
                             <div class="w-full flex mb-4 items-center">
                                 <div class="overflow-hidden rounded-full w-10 h-10 bg-gray-50 border border-gray-200">
-                                    <img :src="element.image" alt="testimonial image" loading="lazy" class="testimonial-image">
+                                    <img :src="element.image" :alt="`Foto de ${element.fullName}`" loading="lazy" class="testimonial-image">
                                 </div>
                                 <h6 class="ml-4 font-bold text-sm uppercase text-black">{{ element.fullName }}</h6>
                             </div>
@@ -23,7 +23,7 @@
                     </div>
                 </Slide>
                 <template #addons>
-                    <Navigation />
+                    <Navigation aria-label="Controles del carrusel" />
                 </template>
             </Carousel>
         </div>
@@ -41,14 +41,14 @@ import Persona3 from '@/assets/Persona3.jpg';
 import Persona4 from '@/assets/Persona4.webp';
 import Persona5 from '@/assets/Persona5.jpg';
 
-// Carousel settings
-const settings = ref({
+// Configuración del carrusel
+const settings = {
     itemsToShow: 1,
     snapAlign: "center",
-});
+};
 
-// Breakpoints para diferentes tamaños de pantalla
-const breakpoints = ref({
+// Puntos de quiebre para diseño responsivo
+const breakpoints = {
     700: {
         itemsToShow: 2,
         snapAlign: 'center',
@@ -57,7 +57,7 @@ const breakpoints = ref({
         itemsToShow: 3,
         snapAlign: 'start'
     }
-});
+};
 
 // Datos de testimonios
 const testimonials = ref([
@@ -106,7 +106,6 @@ const testimonials = ref([
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
 }
 
 /* Asegurar que todas las tarjetas sean del mismo tamaño */
@@ -114,7 +113,6 @@ const testimonials = ref([
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
     min-height: 250px;
 }
 
