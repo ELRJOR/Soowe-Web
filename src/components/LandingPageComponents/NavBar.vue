@@ -6,10 +6,9 @@
         </div>
 
         <!-- Botón de hamburguesa -->
-        <button type="button" class="block focus:outline-none md:hidden z-30" 
-        @click="toggleMenu">
-        <img v-if="isMenuOpen" src="https://img.icons8.com/ios-filled/100/0/0/0/delete-sign.png" alt="close" width="40" height="40">
-        <img v-else src="https://img.icons8.com/ios-filled/100/0/0/0/menu--v6.png" alt="menu" width="40" height="40">
+        <button type="button" class="block focus:outline-none md:hidden z-30" @click="toggleMenu">
+            <img v-if="isMenuOpen" src="https://img.icons8.com/ios-filled/100/0/0/0/delete-sign.png" alt="close" width="40" height="40">
+            <img v-else src="https://img.icons8.com/ios-filled/100/0/0/0/menu--v6.png" alt="menu" width="40" height="40">
         </button>
 
         <!-- Menú desplegable -->
@@ -24,11 +23,12 @@
 
             <ul class="flex flex-col items-center space-y-5 md:flex-row md:space-x-5 md:space-y-0">
                 <li v-for="item in Menu" :key="item.name">
-                    <a :href="item.href" 
-                    class="block text-primary font-bold transition hover:text-titles ease-linear text-2xl md:text-lg"
-                    @click="scrollToSection(item.href)">
+                    <router-link 
+                        :to="item.route" 
+                        class="block text-primary font-bold transition hover:text-titles ease-linear text-2xl md:text-lg"
+                        @click="closeMenu">
                         {{ item.name }}
-                    </a>
+                    </router-link>
                 </li>
             </ul>
         </nav>
@@ -39,22 +39,18 @@
 import { ref } from 'vue';
 
 const Menu = ref([
-    { name: 'Ingresar', href: '#iniciarsesion' },
+    { name: 'Ingresar', route: '/login' },
 ]);
 
 const isMenuOpen = ref(false);
 
-const scrollToSection = (href) => {
+const closeMenu = () => {
     isMenuOpen.value = false;
-    const section = document.querySelector(href.startsWith("#") ? href : `#${href}`);
-    if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-    }
+    document.body.style.overflow = 'auto';
 };
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
     document.body.style.overflow = isMenuOpen.value ? 'hidden' : 'auto';
 };
-
 </script>
