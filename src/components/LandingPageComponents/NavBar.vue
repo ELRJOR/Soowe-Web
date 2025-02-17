@@ -42,6 +42,7 @@ const Menu = ref([
     { name: 'Ingresar', route: '/login' },
 ]);
 
+
 const isMenuOpen = ref(false);
 
 const closeMenu = () => {
