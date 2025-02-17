@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../pages/Dashboard.vue'
-import Login from '../pages/login.vue'
+import Login from '../pages/Login.vue'
 import LandingPage from '../pages/LandingPage.vue' // Agregamos la landing
 
 const routes = [
