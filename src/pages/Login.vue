@@ -1,14 +1,13 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden flex">
-      
+    <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
       <!-- Imagen a la izquierda -->
-      <div class="hidden md:block md:w-1/2">
-        <img src="@/assets/Logo.png" alt="Login" class="w-full h-full object-cover" />
+      <div class="hidden md:flex items-center justify-center bg-blue-500">
+        <img src="@/assets/ClinicaMerida.jpeg" alt="Login Image" class="w-3/4 h-auto" />
       </div>
 
       <!-- Formulario a la derecha -->
-      <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+      <div class="p-8">
         <h2 class="text-3xl font-bold text-center mb-6 text-gray-700">Iniciar sesión</h2>
 
         <form @submit.prevent="handleLogin">
