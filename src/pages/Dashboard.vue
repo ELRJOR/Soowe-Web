@@ -7,7 +7,6 @@
         <NurseManagement />
         <AppointmentsSection />
         <SettingsSection />
-        <Footer />
     </div>
 </template>
 
@@ -20,7 +19,6 @@
     const NurseManagement = defineAsyncComponent(() => import('@/components/DashboardComponents/NurseManagement.vue'));
     const AppointmentsSection = defineAsyncComponent(() => import('@/components/DashboardComponents/AppointmentsSection.vue'));
     const SettingsSection = defineAsyncComponent(() => import('@/components/DashboardComponents/SettingsSection.vue'));
-    const Footer = defineAsyncComponent(() => import('@/components/DashboardComponents/Footer.vue'));
 </script>
 
 <style>
