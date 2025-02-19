@@ -1,8 +1,10 @@
 <!-- LandingPage.vue -->
 <template>
     <div>
-      <!-- Componentes que componen la Landing Page -->
       <NavBar />
+    </div>
+    <div class="bg-gray-200">
+      <!-- Componentes que componen la Landing Page -->
       <HeroSection />
       <ServicesSection />
       <Playstoresection />

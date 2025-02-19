@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../pages/Dashboard.vue'
 import Login from '../pages/Login.vue'
 import LandingPage from '../pages/LandingPage.vue' // Agregamos la landing
+import Enfermeros from '../pages/Enfermeros.vue'
+import Solicitudes from '../pages/Solicitudes.vue'
 
 const routes = [
   { path: '/', component: LandingPage }, // Landing page como ruta raíz
@@ -10,7 +12,9 @@ const routes = [
     path: '/dashboard', 
     component: Dashboard,
     meta: { requiresAuth: true } // Meta para indicar que necesita autenticación
-  }
+  },
+  { path: '/enfermeros', component: Enfermeros, meta: {requiresAuth: true}}, // Agregamos la ruta de enfermeros
+  { path: '/solicitudes', component: Solicitudes, meta: {requiresAuth: true}}, // Agregamos la ruta de solicitudes
 ]
 
 const router = createRouter({
