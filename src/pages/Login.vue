@@ -106,7 +106,7 @@
           </a>
         </div>
 
-        <!-- Botón de login -->
+        <!-- Botón de login --->
         <button
           type="submit"
           :disabled="loading"
