@@ -11,15 +11,15 @@
           v-for="item in Menu"
           :key="item.name"
           :class="{
-            'bg-gray-200': isActive(item.route), // Cambia el fondo cuando está activo
-            'rounded-lg': true, // Opcional para bordes redondeados
+            'bg-gray-200': isActive(item.route),
+            'rounded-lg': true,
           }"
         >
           <router-link
             :to="item.route"
             class="block text-primary font-bold transition hover:text-titles ease-linear text-lg py-2 px-4"
             :class="{
-              'text-blue-500': isActive(item.route), // Cambia el color del texto cuando está activo
+              'text-blue-500': isActive(item.route),
             }"
           >
             {{ item.name }}
@@ -43,13 +43,40 @@
           @click="toggleDropdown"
         />
       </div>
+      <!-- Menú desplegable con animación -->
+      <div
+        v-if="isDropdownOpen"
+        ref="dropdownMenu"
+        class="absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-48 border border-gray-300 z-20 transform transition-all duration-300 ease-in-out"
+        :class="isDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'"
+      >
+        <ul>
+          <li @click="goToProfile" class="px-4 py-2 text-primary cursor-pointer hover:bg-gray-100">
+            Mi perfil
+          </li>
+          <li @click="logout" class="px-4 py-2 text-primary cursor-pointer hover:bg-gray-100">
+            Cerrar sesión
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Dropdown Menu -->
-    <div v-if="isDropdownOpen" class="absolute right-4 top-16 mt-2 w-40 bg-white shadow-lg rounded-lg border-2 border-black z-30" ref="dropdownMenu">
-      <ul class="space-y-2 p-2 text-sm">
-        <li @click="goToProfile" class="cursor-pointer hover:bg-gray-200 p-2">Mi perfil</li>
-        <li @click="logout" class="cursor-pointer hover:bg-gray-200 p-2">Cerrar sesión</li>
+    <!-- Menú de hamburguesa con animación -->
+    <div 
+      class="absolute top-20 left-0 w-full bg-white shadow-xl rounded-lg border border-gray-300 z-30 md:hidden 
+             transform transition-all duration-300 ease-in-out origin-top"
+      :class="isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 invisible'">
+      <ul class="space-y-2 p-5 text-lg font-bold text-primary">
+        <li v-for="item in Menu" :key="item.name">
+          <router-link 
+            :to="item.route" 
+            class="block p-3 hover:bg-gray-200 rounded-lg transition duration-300 ease-in-out"
+            :class="{ 'text-blue-500': isActive(item.route) }"
+            @click="closeMenu"
+          >
+            {{ item.name }}
+          </router-link>
+        </li>
       </ul>
     </div>
 
@@ -62,7 +89,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { useRoute } from 'vue-router'; // Importa useRoute para obtener la ruta activa
+import { useRoute } from 'vue-router';
 
 const Menu = ref([
   { name: 'Dashboard', route: '/dashboard' },
@@ -75,7 +102,7 @@ const isDropdownOpen = ref(false);
 
 const profileMenu = ref(null);
 const dropdownMenu = ref(null);
-const route = useRoute(); // Usamos useRoute para obtener la ruta activa
+const route = useRoute();
 
 const closeMenu = () => {
   isMenuOpen.value = false;
@@ -91,12 +118,10 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-// Determina si un item está activo
 const isActive = (routeName) => {
-  return route.path === routeName; // Compara el path actual con el del item
+  return route.path === routeName;
 };
 
-// Cierra el dropdown si se hace click fuera de él
 const handleClickOutside = (event) => {
   if (profileMenu.value && !profileMenu.value.contains(event.target) && dropdownMenu.value && !dropdownMenu.value.contains(event.target)) {
     isDropdownOpen.value = false;
@@ -112,12 +137,10 @@ onBeforeUnmount(() => {
 });
 
 const goToProfile = () => {
-  // Implementa la navegación al perfil
   console.log('Go to profile page');
 };
 
 const logout = () => {
-  // Implementa la funcionalidad de cierre de sesión
   console.log('Logout');
 };
 </script>

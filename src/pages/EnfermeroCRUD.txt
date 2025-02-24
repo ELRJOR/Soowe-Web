@@ -1,0 +1,85 @@
+<template>
+  <NavBar />
+  <div class="p-4">
+    <h1 class="text-2xl font-bold mb-4">Administración de Enfermeros</h1>
+    <!-- Componente para el formulario -->
+    <EnfermeroForm @submit="handleFormSubmit" />
+    <!-- Componente para la lista, se pasan los enfermeros y se escuchan los eventos edit y delete -->
+    <EnfermeroList 
+      :enfermeros="enfermeros" 
+      @edit="editEnfermero" 
+      @delete="deleteEnfermero" 
+    />
+  </div>
+</template>
+
+<script setup>
+import { defineAsyncComponent, ref } from 'vue';
+const NavBar = defineAsyncComponent(() => import('@/components/DashboardComponents/NavBar.vue'));
+import api from '../conexionapi'      // Conexión a la API (axios configurado)
+import auth from '../auth'            // Módulo de autenticación para obtener el id de la organización
+import EnfermeroForm from '@/components/EnfermerosComponents/EnfermeroForm'
+import EnfermeroList from '@/components/EnfermerosComponents/EnfermeroList'
+
+const enfermeros = ref([])
+
+// Se obtiene el id de la organización que está dando de alta
+const organizationId = auth.getOrganizationId()
+
+// Función para obtener la lista de enfermeros desde la API
+const fetchEnfermeros = async () => {
+  try {
+    const response = await api.get('/enfermeros')
+    enfermeros.value = response.data
+  } catch (error) {
+    console.error('Error al obtener enfermeros:', error)
+  }
+}
+
+// Manejo del evento submit emitido por EnfermeroForm.vue
+const handleFormSubmit = async (formData) => {
+  try {
+    const payload = {
+      nombre: formData.nombre,
+      apellido: formData.apellido,
+      especialidad: formData.especialidad,
+      telefono: formData.telefono,
+      correo: formData.correo,
+      contrasena: formData.contrasena, // Se puede realizar el hash en el backend
+      foto_perfil: {
+        url: formData.fotoPerfilUrl || 'https://example.com/default-profile.jpg',
+        public_id: formData.correo.split('@')[0]
+      },
+      organizacion_id: organizationId, // Se asigna automáticamente la organización actual
+      disponibilidad: false,
+      calificacion_promedio: 0,
+      resenas: []
+    }
+    await api.post('/enfermeros', payload)
+    // Actualizar la lista de enfermeros después de la creación
+    fetchEnfermeros()
+  } catch (error) {
+    console.error('Error al crear enfermero:', error)
+  }
+}
+
+// Función para editar enfermero (por implementar según tu lógica)
+const editEnfermero = (enfermero) => {
+  console.log('Editar enfermero:', enfermero)
+  // Aquí podrías abrir un modal o redirigir a otra vista para editar
+}
+
+// Función para eliminar enfermero
+const deleteEnfermero = async (id) => {
+  try {
+    await api.delete(`/enfermeros/${id}`)
+    fetchEnfermeros()
+  } catch (error) {
+    console.error('Error al eliminar enfermero:', error)
+  }
+}
+
+onMounted(() => {
+  fetchEnfermeros()
+})
+</script>
