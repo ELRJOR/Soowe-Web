@@ -1,6 +1,5 @@
 import api from './conexionapi';
-import { jwtDecode } from 'jwt-decode'; // ✅ Importación correcta para Vite
-
+import { jwtDecode } from 'jwt-decode'; 
 // Función para hacer login
 export const login = async (correo, contrasena) => {
   try {
