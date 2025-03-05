@@ -38,6 +38,16 @@ const closeModal = (event) => {
   }
 };
 
+// Abrir modal con animación
+const openModal = () => {
+  showModal.value = true;
+  // Forzar un retraso para asegurar que el modal se renderice antes de la animación
+  setTimeout(() => {
+    document.getElementById('modal-content').classList.remove('opacity-0', 'scale-95');
+    document.getElementById('modal-content').classList.add('opacity-100', 'scale-100');
+  }, 10);
+};
+
 // Cargar enfermeros al montar el componente
 onMounted(getEnfermeros);
 </script>
@@ -51,9 +61,8 @@ onMounted(getEnfermeros);
 
     <div class="bg-white shadow-md rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-700">Lista de Enfermeros</h2>
         <button 
-          @click="showModal = true" 
+          @click="openModal" 
           class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition"
         >
           + Agregar Enfermero
@@ -68,15 +77,17 @@ onMounted(getEnfermeros);
     </div>
   </div>
 
-  <!-- 📌 Modal Mejorado -->
+  <!-- 📌 Modal Mejorado con Animación -->
   <div 
-    v-if="showModal" 
+    v-show="showModal" 
     id="modal-overlay"
     @click="closeModal"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 transition-opacity duration-300"
+    :class="{'opacity-0 pointer-events-none': !showModal, 'opacity-100': showModal}"
   >
     <div 
-      class="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg sm:max-w-2xl transform transition-all scale-95 sm:scale-100"
+      id="modal-content"
+      class="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg sm:max-w-2xl transform transition-all duration-300 opacity-0 scale-95"
     >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-semibold text-gray-800">Registrar Enfermero</h2>
@@ -88,7 +99,7 @@ onMounted(getEnfermeros);
         </button>
       </div>
 
-        <EnfermeroForm @submit="handleFormSubmit" />
+      <EnfermeroForm @submit="handleFormSubmit" />
     </div>
   </div>
 </template>
