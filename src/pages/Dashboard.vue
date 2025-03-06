@@ -106,7 +106,7 @@ const fetchSolicitudes = async () => {
       return;
     }
 
-    const response = await api.get('/api/mobile/solicitudes');
+    const response = await api.get('/api/api/admin/enfermeros');
     
     // Verificar estructura de respuesta
     if (Array.isArray(response.data)) {
