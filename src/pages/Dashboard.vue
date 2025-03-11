@@ -9,10 +9,10 @@
 
         <!-- Resumen de estadísticas -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <StatsCard title="Solicitudes" :value="requestCount" />
-          <StatsCard title="Enfermeros" :value="nurseCount" />
-          <StatsCard title="Solicitudes Atendidas" :value="attendedRequests" />
-          <StatsCard title="Solicitudes Pendientes" :value="pendingRequests" />
+          <StatsCard title="Enfermeros Registrados" :value="nurseCount" />
+          <StatsCard title="Solicitudes Entrantes" :value="incomingRequests" />
+          <StatsCard title="Solicitudes Completadas" :value="completedRequests" />
+          <StatsCard title="Dinero Neto Generado" :value="netRevenue" />
         </div>
 
         <!-- Gráficos -->
@@ -45,10 +45,10 @@ import ChartCard from '@/components/DashboardComponents/ChartCard.vue'; // Ajust
 
 // Variables reactivas
 const selectedView = ref('organization');
-const requestCount = ref(0);
 const nurseCount = ref(0);
-const attendedRequests = ref(0);
-const pendingRequests = ref(0);
+const incomingRequests = ref(0);
+const completedRequests = ref(0);
+const netRevenue = ref(0); // Dinero neto generado
 
 // Opciones de gráficos (inicialmente vacías, se actualizarán dinámicamente)
 const patientsChartOptions = ref({
@@ -94,9 +94,8 @@ const changeView = (view) => {
   selectedView.value = view;
 };
 
-
-// Función para obtener solicitudes
-const fetchSolicitudes = async () => {
+// Función para obtener solicitudes entrantes
+const fetchIncomingRequests = async () => {
   try {
     const token = getToken();
     const organizationId = getOrganizationId();
@@ -106,46 +105,53 @@ const fetchSolicitudes = async () => {
       return;
     }
 
-    const response = await api.get('/api/api/admin/enfermeros');
-    
-    // Verificar estructura de respuesta
+    const response = await api.get('/api/admin/solicitudes/entrantes', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
     if (Array.isArray(response.data)) {
-      console.log("Datos de solicitudes:", response.data); // Depuración
-
-      requestCount.value = response.data.length;
-
-      // Solicitudes atendidas
-      const solicitudesAtendidas = response.data.filter(
-        solicitud => solicitud.estado.trim().toLowerCase() === 'atendida'
-      );
-      attendedRequests.value = solicitudesAtendidas.length;
-
-      // Solicitudes pendientes
-      const solicitudesPendientes = response.data.filter(
-        solicitud => solicitud.estado.trim().toLowerCase() === 'pendiente'
-      );
-      console.log("Solicitudes pendientes:", solicitudesPendientes); // Depuración
-      pendingRequests.value = solicitudesPendientes.length;
-
-      // Si el conteo sigue siendo incorrecto, prueba con un filtro más estricto:
-      /*
-      const solicitudesPendientesEstricto = response.data.filter(
-        solicitud => solicitud.estado === 'Pendiente'
-      );
-      console.log("Solicitudes pendientes (filtro estricto):", solicitudesPendientesEstricto);
-      pendingRequests.value = solicitudesPendientesEstricto.length;
-      */
-
-      // Actualizar gráfico de estado de solicitudes
-      statusChartOptions.value.series[0].data = [
-        { value: attendedRequests.value, name: 'Atendidas' },
-        { value: pendingRequests.value, name: 'Pendientes' }
-      ];
+      incomingRequests.value = response.data.length;
     } else {
       console.error("Respuesta no es un array:", response.data);
     }
   } catch (error) {
-    console.error('Error en solicitudes:', error.response?.data || error);
+    console.error('Error en solicitudes entrantes:', error.response?.data || error);
+  }
+};
+
+// Función para obtener solicitudes completadas y calcular el dinero neto generado
+const fetchCompletedRequests = async () => {
+  try {
+    const token = getToken();
+    const organizationId = getOrganizationId();
+
+    if (!token || !organizationId) {
+      console.error("Token u organización no válidos");
+      return;
+    }
+
+    const response = await api.get(`/api/admin/organizaciones/${organizationId}/solicitudes`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (Array.isArray(response.data)) {
+      // Filtrar solicitudes completadas
+      const solicitudesCompletadas = response.data.filter(
+        solicitud => solicitud.estado.trim().toLowerCase() === 'completado'
+      );
+      completedRequests.value = solicitudesCompletadas.length;
+
+      // Calcular dinero neto generado
+      netRevenue.value = solicitudesCompletadas.reduce((total, solicitud) => {
+        // Convertir el precio_estimado a número y sumarlo
+        const precio = parseFloat(solicitud.servicio.precio_estimado) || 0;
+        return total + precio;
+      }, 0);
+    } else {
+      console.error("Respuesta no es un array:", response.data);
+    }
+  } catch (error) {
+    console.error('Error en solicitudes completadas:', error.response?.data || error);
   }
 };
 
@@ -160,33 +166,15 @@ const fetchEnfermeros = async () => {
       return;
     }
 
-    const response = await api.get('/api/mobile/enfermeros');
-    
-    // Verificar estructura de respuesta
+    const response = await api.get('/api/mobile/enfermeros', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
     if (Array.isArray(response.data)) {
-      console.log("Respuesta de la API (enfermeros):", response.data); // Depuración
-
-      // Comparar organizationId con los valores de organizacion_id
-      console.log("Organization ID:", organizationId);
-      console.log("Valores de organizacion_id en los datos:", response.data.map(e => e.organizacion_id));
-
-      // Filtrar enfermeros con organizacion_id definido
-      const enfermerosConOrganizacion = response.data.filter(
-        enfermero => enfermero.organizacion_id !== null && enfermero.organizacion_id !== undefined
-      );
-      console.log("Enfermeros con organizacion_id definido:", enfermerosConOrganizacion);
-      console.log("Número de enfermeros con organizacion_id definido:", enfermerosConOrganizacion.length);
-
-      // Filtrar enfermeros por organización
       const enfermerosFiltrados = response.data.filter(
         enfermero => String(enfermero.organizacion_id) === String(organizationId)
       );
-      console.log("Enfermeros filtrados:", enfermerosFiltrados); // Depuración
       nurseCount.value = enfermerosFiltrados.length;
-
-      // Actualizar gráfico de enfermeros
-      nursesChartOptions.value.xAxis.data = ['Turno 1', 'Turno 2', 'Turno 3']; // Ejemplo de turnos
-      nursesChartOptions.value.series[0].data = [8, 10, 6]; // Ejemplo de datos
     } else {
       console.error("Respuesta no es un array:", response.data);
     }
@@ -197,7 +185,8 @@ const fetchEnfermeros = async () => {
 
 // Al montar el componente
 onMounted(() => {
-  fetchSolicitudes();
   fetchEnfermeros();
+  fetchIncomingRequests();
+  fetchCompletedRequests();
 });
 </script>
