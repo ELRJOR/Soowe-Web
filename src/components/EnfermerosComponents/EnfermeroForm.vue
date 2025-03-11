@@ -187,14 +187,14 @@
             <p v-if="confirmPasswordError" class="text-red-500 text-sm">{{ confirmPasswordError }}</p>
           </div>
 
-          <!-- URL Foto de Perfil -->
-          <div class="sm:col-span-2">
-            <label class="block text-sm font-medium text-gray-700">URL Foto de Perfil</label>
+          <!-- Campo de Foto de Perfil -->
+        <div class="sm:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
             <input 
-              type="text" 
-              v-model="form.fotoPerfilUrl" 
+              type="file" 
+              @change="handleFileUpload" 
+              accept=".jpg, .jpeg, .png" 
               class="mt-1 block w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-              placeholder="Opcional" 
             />
           </div>
         </div>
@@ -225,6 +225,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import { addEnfermero } from '../../api/enfermeros'
 
 const emit = defineEmits(['submit'])
 
@@ -235,7 +236,7 @@ const form = reactive({
   telefono: '',
   correo: '',
   contrasena: '',
-  fotoPerfilUrl: ''
+  fotoPerfil: null // Cambiamos fotoPerfilUrl por fotoPerfil para manejar el archivo
 })
 
 const confirmPassword = ref('')
@@ -247,6 +248,7 @@ const isSubmitting = ref(false)
 const showSuccess = ref(false)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+
 
 function validatePhone() {
   // Limitar a solo dígitos
@@ -292,36 +294,67 @@ function toggleConfirmPasswordVisibility() {
   showConfirmPassword.value = !showConfirmPassword.value
 }
 
-function onSubmit() {
-  validatePhone()
-  validateEmail()
-  validatePassword()
-  validateConfirmPassword()
+async function onSubmit() {
+  validatePhone();
+  validateEmail();
+  validatePassword();
+  validateConfirmPassword();
 
   if (phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
-    return
+    return;
   }
 
-  isSubmitting.value = true
+  isSubmitting.value = true;
 
-  // Simulamos una llamada asíncrona con un setTimeout
-  setTimeout(() => {
-    emit('submit', { ...form })
-    form.nombre = ''
-    form.apellido = ''
-    form.especialidad = ''
-    form.telefono = ''
-    form.correo = ''
-    form.contrasena = ''
-    form.fotoPerfilUrl = ''
-    confirmPassword.value = ''
-    isSubmitting.value = false
-    showSuccess.value = true
+  try {
+    // Crear el objeto formData con los datos del formulario
+    const formData = {
+      nombre: form.nombre,
+      apellido: form.apellido,
+      especialidad: form.especialidad,
+      telefono: form.telefono,
+      correo: form.correo,
+      contrasena: form.contrasena,
+      fotoPerfil: form.fotoPerfil, // Archivo de imagen
+    };
+
+    // Llamar a la función addEnfermero para enviar los datos al backend
+    const response = await addEnfermero(formData);
+
+    if (response) {
+      console.log('✅ Enfermero creado correctamente:', response);
+      showSuccess.value = true;
+
+      // Limpiar el formulario después de enviar
+      form.nombre = '';
+      form.apellido = '';
+      form.especialidad = '';
+      form.telefono = '';
+      form.correo = '';
+      form.contrasena = '';
+      form.fotoPerfil = null;
+      confirmPassword.value = '';
+    }
 
     // Ocultar la notificación después de 3 segundos
     setTimeout(() => {
-      showSuccess.value = false
-    }, 3000)
-  }, 2000)
+      showSuccess.value = false;
+    }, 3000);
+  } catch (error) {
+    console.error('❌ Error al crear enfermero:', error);
+    alert('Hubo un error al crear el enfermero. Inténtalo de nuevo.');
+  } finally {
+    isSubmitting.value = false;
+  }
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+    form.fotoPerfil = file; // Guarda el archivo en el objeto form
+  } else {
+    alert('Por favor, sube una imagen válida (jpg, jpeg, png).');
+    form.fotoPerfil = null;
+  }
 }
 </script>

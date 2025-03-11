@@ -47,28 +47,32 @@ export const addEnfermero = async (formData) => {
     return;
   }
 
-  const payload = {
-    nombre: formData.nombre,
-    apellido: formData.apellido,
-    especialidad: formData.especialidad,
-    telefono: formData.telefono,
-    correo: formData.correo,
-    contrasena: formData.contrasena,
-    foto_perfil: {
-      url: formData.fotoPerfilUrl || 'https://example.com/default-profile.jpg',
-      public_id: formData.correo.split('@')[0]
-    },
-    organizacion_id: validOrgId,
-    disponibilidad: false,
-    calificacion_promedio: 0,
-    resenas: []
-  };
+  // Crear un objeto FormData para enviar los datos
+  const formDataToSend = new FormData();
 
-  console.log("📤 Datos enviados a la API:", payload);
+  // Agregar los campos del formulario al FormData
+  formDataToSend.append('nombre', formData.nombre);
+  formDataToSend.append('apellido', formData.apellido);
+  formDataToSend.append('especialidad', formData.especialidad);
+  formDataToSend.append('telefono', formData.telefono);
+  formDataToSend.append('correo', formData.correo);
+  formDataToSend.append('contrasena', formData.contrasena);
+  formDataToSend.append('organizacion_id', validOrgId);
+  formDataToSend.append('disponibilidad', true);
+
+  // Si hay una imagen seleccionada, la agregamos al FormData
+  if (formData.fotoPerfil) {
+    formDataToSend.append('foto_perfil', formData.fotoPerfil);
+  }
+
+  console.log("📤 Datos enviados a la API:", formDataToSend);
 
   try {
-    const response = await api.post('/api/admin/enfermeros', payload, {
-      headers: { Authorization: `Bearer ${token}` }
+    const response = await api.post('/api/admin/enfermeros', formDataToSend, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data', // Importante para enviar archivos
+      },
     });
 
     console.log('✅ Enfermero creado correctamente:', response.data);
