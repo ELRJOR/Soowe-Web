@@ -1,8 +1,10 @@
 <template>
-  <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <!-- Contenedor principal (se oculta cuando el modal de éxito está visible) -->
+  <div v-if="!showSuccessModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <!-- Formulario de Registro -->
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto max-h-[90vh] overflow-y-auto">
       <form @submit.prevent="onSubmit">
-        <!-- 📌 Grid Responsivo Corregido -->
+        <!-- 📌 Grid Responsivo -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Nombre -->
           <div>
@@ -188,7 +190,7 @@
           </div>
 
           <!-- Campo de Foto de Perfil -->
-        <div class="sm:col-span-2">
+          <div class="sm:col-span-2">
             <label class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
             <input 
               type="file" 
@@ -210,15 +212,32 @@
           </button>
         </div>
 
-        <!-- 📌 Animación y Notificación -->
+        <!-- 📌 Animación de Carga -->
         <div v-if="isSubmitting" class="mt-4">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
         </div>
-        <div v-if="showSuccess" class="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-          <strong class="font-bold">¡Éxito!</strong>
-          <span class="block sm:inline">El enfermero se ha registrado correctamente.</span>
-        </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal de Éxito (fuera del contenedor del formulario) -->
+  <div v-if="showSuccessModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+      <div class="text-center">
+        <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <h3 class="mt-2 text-lg font-medium text-gray-900">¡Éxito!</h3>
+        <p class="mt-1 text-sm text-gray-500">El enfermero se ha registrado correctamente.</p>
+        <div class="mt-4">
+          <button 
+            @click="closeModal" 
+            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -236,7 +255,7 @@ const form = reactive({
   telefono: '',
   correo: '',
   contrasena: '',
-  fotoPerfil: null // Cambiamos fotoPerfilUrl por fotoPerfil para manejar el archivo
+  fotoPerfil: null
 })
 
 const confirmPassword = ref('')
@@ -245,15 +264,12 @@ const emailError = ref('')
 const passwordError = ref('')
 const confirmPasswordError = ref('')
 const isSubmitting = ref(false)
-const showSuccess = ref(false)
+const showSuccessModal = ref(false)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 
-
 function validatePhone() {
-  // Limitar a solo dígitos
   form.telefono = form.telefono.replace(/\D/g, '')
-
   if (form.telefono.length > 10) {
     phoneError.value = 'El teléfono no debe exceder los 10 dígitos.'
   } else {
@@ -295,19 +311,18 @@ function toggleConfirmPasswordVisibility() {
 }
 
 async function onSubmit() {
-  validatePhone();
-  validateEmail();
-  validatePassword();
-  validateConfirmPassword();
+  validatePhone()
+  validateEmail()
+  validatePassword()
+  validateConfirmPassword()
 
   if (phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
-    return;
+    return
   }
 
-  isSubmitting.value = true;
+  isSubmitting.value = true
 
   try {
-    // Crear el objeto formData con los datos del formulario
     const formData = {
       nombre: form.nombre,
       apellido: form.apellido,
@@ -315,46 +330,35 @@ async function onSubmit() {
       telefono: form.telefono,
       correo: form.correo,
       contrasena: form.contrasena,
-      fotoPerfil: form.fotoPerfil, // Archivo de imagen
-    };
-
-    // Llamar a la función addEnfermero para enviar los datos al backend
-    const response = await addEnfermero(formData);
-
-    if (response) {
-      console.log('✅ Enfermero creado correctamente:', response);
-      showSuccess.value = true;
-
-      // Limpiar el formulario después de enviar
-      form.nombre = '';
-      form.apellido = '';
-      form.especialidad = '';
-      form.telefono = '';
-      form.correo = '';
-      form.contrasena = '';
-      form.fotoPerfil = null;
-      confirmPassword.value = '';
+      fotoPerfil: form.fotoPerfil,
     }
 
-    // Ocultar la notificación después de 3 segundos
-    setTimeout(() => {
-      showSuccess.value = false;
-    }, 3000);
+    const response = await addEnfermero(formData)
+
+    if (response) {
+      console.log('✅ Enfermero creado correctamente:', response)
+      showSuccessModal.value = true
+    }
   } catch (error) {
-    console.error('❌ Error al crear enfermero:', error);
-    alert('Hubo un error al crear el enfermero. Inténtalo de nuevo.');
+    console.error('❌ Error al crear enfermero:', error)
+    alert('Hubo un error al crear el enfermero. Inténtalo de nuevo.')
   } finally {
-    isSubmitting.value = false;
+    isSubmitting.value = false
   }
 }
 
 function handleFileUpload(event) {
-  const file = event.target.files[0];
+  const file = event.target.files[0]
   if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-    form.fotoPerfil = file; // Guarda el archivo en el objeto form
+    form.fotoPerfil = file
   } else {
-    alert('Por favor, sube una imagen válida (jpg, jpeg, png).');
-    form.fotoPerfil = null;
+    alert('Por favor, sube una imagen válida (jpg, jpeg, png).')
+    form.fotoPerfil = null
   }
+}
+
+function closeModal() {
+  showSuccessModal.value = false
+  emit('close') // Emitir evento para cerrar el formulario completo
 }
 </script>

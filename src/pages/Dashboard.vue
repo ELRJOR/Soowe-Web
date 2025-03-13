@@ -17,14 +17,14 @@
 
         <!-- Gráficos -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <ChartCard title="Pacientes" :chartOptions="patientsChartOptions" />
-          <ChartCard title="Enfermeros" :chartOptions="nursesChartOptions" />
-          <ChartCard title="Solicitudes Asignadas" :chartOptions="assignedRequestsChartOptions" />
+          <ChartCard title="Enfermeros dados de alta" :chartOptions="NaN" />
+          <ChartCard title="Dinero generado" :chartOptions="NaN" />
+          <ChartCard title="Solicitudes Asignadas" :chartOptions="NaN" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <ChartCard title="Estatus de Solicitudes" :chartOptions="statusChartOptions" />
-          <ChartCard title="Demográfico" :chartOptions="demographicsChartOptions" />
+          <ChartCard title="Estatus de Solicitudes" :chartOptions="NaN" />
+          <ChartCard title="Demográfico" :chartOptions="NaN" />
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ const patientsChartOptions = ref({
 const nursesChartOptions = ref({
   xAxis: { type: 'category', data: [] },
   yAxis: { type: 'value' },
-  series: [{ name: 'Enfermeros', type: 'bar', data: [], color: '#2C5282' }]
+  series: [{ name: 'Enfermeros', type: 'line', data: [], color: '#2C5282' }]
 });
 
 const assignedRequestsChartOptions = ref({
@@ -155,6 +155,82 @@ const fetchCompletedRequests = async () => {
   }
 };
 
+// Función para obtener y procesar datos de enfermeros por mes
+const fetchEnfermerosPorMes = async () => {
+  try {
+    const token = getToken();
+    const organizationId = getOrganizationId();
+
+    if (!token || !organizationId) {
+      console.error("Token u organización no válidos");
+      return;
+    }
+
+    const response = await api.get('/api/mobile/enfermeros', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    console.log("Respuesta completa de la API:", response.data); // Verificar datos
+
+    if (Array.isArray(response.data)) {
+      const enfermerosFiltrados = response.data.filter(
+        enfermero => String(enfermero.organizacion_id) === String(organizationId)
+      );
+
+      console.log("Enfermeros filtrados:", enfermerosFiltrados);
+
+      // Objeto para agrupar enfermeros por mes (clave: 'YYYY-MM')
+      const enfermerosPorMes = {};
+
+      enfermerosFiltrados.forEach(enfermero => {
+        if (!enfermero.fecha_registro) {
+          console.warn("Enfermero sin fecha de registro:", enfermero);
+          return;
+        }
+
+        // Convertir la fecha a un objeto Date
+        const fecha = new Date(enfermero.fecha_registro);
+        if (isNaN(fecha)) {
+          console.warn("Fecha inválida:", enfermero.fecha_registro);
+          return;
+        }
+
+        // Formato 'YYYY-MM' para agrupar
+        const mesClave = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
+        enfermerosPorMes[mesClave] = (enfermerosPorMes[mesClave] || 0) + 1;
+      });
+
+      // Ordenar los meses correctamente
+      const mesesOrdenados = Object.keys(enfermerosPorMes).sort((a, b) => new Date(a) - new Date(b));
+
+      // Convertir a formato 'MMM YYYY' para mostrar en la gráfica
+      const etiquetasMeses = mesesOrdenados.map(mes => {
+        const [year, month] = mes.split('-');
+        return new Date(year, month - 1).toLocaleString('default', { month: 'short', year: 'numeric' });
+      });
+
+      // Obtener valores en el orden correcto
+      const valoresEnfermeros = mesesOrdenados.map(mes => enfermerosPorMes[mes]);
+
+      // Mostrar los datos en consola para depuración
+      console.log("Meses Ordenados:", mesesOrdenados);
+      console.log("Etiquetas Meses:", etiquetasMeses);
+      console.log("Valores Enfermeros:", valoresEnfermeros);
+
+      // Actualizar opciones de la gráfica
+      nursesChartOptions.value = {
+        xAxis: { type: 'category', data: etiquetasMeses },
+        yAxis: { type: 'value' },
+        series: [{ name: 'Enfermeros', type: 'line', data: valoresEnfermeros, color: '#2C5282' }]
+      };
+    } else {
+      console.error("Respuesta no es un array:", response.data);
+    }
+  } catch (error) {
+    console.error('Error al obtener enfermeros por mes:', error.response?.data || error);
+  }
+};
+
 // Función para obtener enfermeros
 const fetchEnfermeros = async () => {
   try {
@@ -188,5 +264,6 @@ onMounted(() => {
   fetchEnfermeros();
   fetchIncomingRequests();
   fetchCompletedRequests();
+  fetchEnfermerosPorMes();
 });
 </script>
