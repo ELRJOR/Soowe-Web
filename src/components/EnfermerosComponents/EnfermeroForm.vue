@@ -283,8 +283,7 @@
 </template>
 
 <script setup>
-// Agregar la importación de onMounted al inicio del script
-import { reactive, ref, computed, onMounted } from 'vue';
+import { reactive, ref, computed } from 'vue';
 
 const emit = defineEmits(['submit']);
 
@@ -309,9 +308,7 @@ const showConfirmPassword = ref(false);
 // Validación de teléfono
 function validatePhone() {
   form.telefono = form.telefono.replace(/\D/g, '');
-  if (form.telefono.length === 0) {
-    phoneError.value = 'El teléfono es obligatorio.';
-  } else if (form.telefono.length !== 10) {
+  if (form.telefono.length > 0 && form.telefono.length !== 10) {
     phoneError.value = 'El teléfono debe tener 10 dígitos.';
   } else {
     phoneError.value = '';
@@ -321,9 +318,7 @@ function validatePhone() {
 // Validación de correo
 function validateEmail() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!form.correo) {
-    emailError.value = 'El correo es obligatorio.';
-  } else if (!emailRegex.test(form.correo)) {
+  if (form.correo && !emailRegex.test(form.correo)) {
     emailError.value = 'Ingrese un correo electrónico válido.';
   } else {
     emailError.value = '';
@@ -332,14 +327,14 @@ function validateEmail() {
 
 // Validación de contraseña
 function validatePassword() {
+  if (!form.contrasena) return;
+  
   const hasDigit = /\d/.test(form.contrasena);
   const hasUppercase = /[A-Z]/.test(form.contrasena);
   const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
   const isLongEnough = form.contrasena.length >= 8;
 
-  if (!form.contrasena) {
-    passwordError.value = 'La contraseña es obligatoria.';
-  } else if (!isLongEnough) {
+  if (!isLongEnough) {
     passwordError.value = 'La contraseña debe tener al menos 8 caracteres.';
   } else if (!(hasDigit && hasUppercase && hasSpecial)) {
     passwordError.value = 'La contraseña debe incluir al menos un número, una mayúscula y un carácter especial.';
@@ -355,9 +350,7 @@ function validatePassword() {
 
 // Validación de confirmación de contraseña
 function validateConfirmPassword() {
-  if (!confirmPassword.value) {
-    confirmPasswordError.value = 'Debe confirmar la contraseña.';
-  } else if (form.contrasena !== confirmPassword.value) {
+  if (confirmPassword.value && form.contrasena !== confirmPassword.value) {
     confirmPasswordError.value = 'Las contraseñas no coinciden.';
   } else {
     confirmPasswordError.value = '';
@@ -367,13 +360,13 @@ function validateConfirmPassword() {
 // Fortaleza de la contraseña
 const passwordStrength = computed(() => {
   if (!form.contrasena) return '';
-  
+
   const hasDigit = /\d/.test(form.contrasena);
   const hasUppercase = /[A-Z]/.test(form.contrasena);
   const hasLowercase = /[a-z]/.test(form.contrasena);
   const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
   const length = form.contrasena.length;
-  
+
   let score = 0;
   if (length >= 8) score += 1;
   if (length >= 12) score += 1;
@@ -381,7 +374,7 @@ const passwordStrength = computed(() => {
   if (hasUppercase) score += 1;
   if (hasLowercase) score += 1;
   if (hasSpecial) score += 1;
-  
+
   if (score <= 2) return 'weak';
   if (score <= 3) return 'medium';
   if (score <= 4) return 'strong';
@@ -400,24 +393,7 @@ const passwordStrengthText = computed(() => {
 
 // Verificar si hay errores
 const hasErrors = computed(() => {
-  // Verificar si hay mensajes de error
-  if (phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
-    return true;
-  }
-  
-  // Verificar que todos los campos requeridos estén completos
-  if (!form.nombre || !form.apellido || !form.especialidad || 
-      !form.telefono || !form.correo || !form.contrasena || !confirmPassword.value) {
-    return true;
-  }
-  
-  // Verificar que las contraseñas coincidan
-  if (form.contrasena !== confirmPassword.value) {
-    return true;
-  }
-  
-  // Si pasa todas las validaciones, no hay errores
-  return false;
+  return phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value;
 });
 
 // Alternar visibilidad de contraseña
@@ -437,14 +413,14 @@ async function onSubmit() {
   validateEmail();
   validatePassword();
   validateConfirmPassword();
-  
+
   // Verificar si hay errores
   if (hasErrors.value) {
     return;
   }
-  
+
   isSubmitting.value = true;
-  
+
   try {
     const formData = {
       nombre: form.nombre,
@@ -481,14 +457,6 @@ function resetForm() {
   passwordError.value = '';
   confirmPasswordError.value = '';
 }
-
-// Ejecutar validaciones iniciales para todos los campos
-onMounted(() => {
-  validatePhone();
-  validateEmail();
-  validatePassword();
-  validateConfirmPassword();
-});
 </script>
 
 <style scoped>
@@ -504,15 +472,6 @@ button[type="submit"]:not(:disabled):hover {
 }
 
 /* Animación para la vista previa de la imagen */
-img {
-  transition: all 0.3s ease;
-}
-
-img:hover {
-  transform: scale(1.05);
-}
-</style>
-</ imagen */
 img {
   transition: all 0.3s ease;
 }
