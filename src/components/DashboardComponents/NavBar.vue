@@ -1,9 +1,9 @@
 <template>
-  <header class="flex justify-between items-center p-3 md:p-5 bg-opacity-50 relative z-20">
+  <header class="flex justify-between items-center p-3 md:p-5 bg-white/95 backdrop-blur-sm shadow-sm relative z-20 border-b border-gray-100">
     <!-- Logo y nombre -->
-    <div class="flex items-center space-x-2">
-      <img src="@/assets/Logo.png" alt="Logo" class="w-7 h-7 md:w-9 md:h-9">
-      <span class="text-xl md:text-2xl font-bold text-primary">Soowe</span>
+    <div class="flex items-center space-x-2 group">
+      <img src="@/assets/Logo.png" alt="Logo" class="w-7 h-7 md:w-9 md:h-9 transition-transform duration-300 group-hover:rotate-12">
+      <span class="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Soowe</span>
     </div>
 
     <!-- Menú de navegación (escritorio) -->
@@ -12,26 +12,13 @@
         <li
           v-for="item in Menu"
           :key="item.name"
-          :class="{
-            'bg-gray-200': isActive(item.route),
-            'rounded-lg': true,
-          }"
+          class="rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md"
+          :class="{ 'bg-blue-50 shadow-sm': isActive(item.route) }"
         >
           <router-link
             :to="item.route"
-            class="block text-primary font-bold transition hover:text-titles ease-linear text-lg py-2 px-4"
-            :class="{
-              'text-blue-500': isActive(item.route),
-            'text-sm md:text-lg': true,
-            'py-1 px-2 md:py-2 md:px-4': true,
-            'hover:bg-gray-100': true,
-            'rounded-lg': true,
-            'transition duration-200 ease-in-out': true,
-            'text-center': true,
-            'whitespace-nowrap': true,
-            'text-sm': true,
-            'md:text-base': true,
-          }"
+            class="block text-primary font-bold py-2 px-4 text-lg whitespace-nowrap text-center transition-all duration-300 ease-in-out hover:bg-blue-50"
+            :class="{ 'text-blue-600': isActive(item.route) }"
           >
             {{ item.name }}
           </router-link>
@@ -40,40 +27,81 @@
     </nav>
 
     <!-- Íconos y menú de perfil -->
-    <div class="flex items-center space-x-2 md:space-x-4 relative" ref="profileMenu">
-      <img src="https://img.icons8.com/?size=100&id=14099&format=png&color=000000" alt="Settings" class="w-5 h-5 md:w-7 md:h-7 cursor-pointer">
-      <img src="https://img.icons8.com/?size=100&id=16008&format=png&color=000000" alt="Notifications" class="w-5 h-5 md:w-7 md:h-7 cursor-pointer">
-      <div class="flex items-center p-1 rounded-lg border-2 border-black">
+    <div class="flex items-center space-x-3 md:space-x-5 relative" ref="profileMenu">
+      <!-- Settings Icon (SVG) -->
+      <button class="group relative">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 cursor-pointer transition-transform duration-300 ease-in-out group-hover:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span class="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs bg-blue-100 text-blue-800 rounded-full px-1.5">Config</span>
+      </button>
+      
+      <!-- Notification Icon (SVG) -->
+      <button class="group relative">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 cursor-pointer transition-all duration-300 ease-in-out group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center animate-pulse">2</span>
+      </button>
+      
+      <!-- Profile Menu -->
+      <div 
+        class="flex items-center p-1.5 rounded-lg border-2 border-gray-300 hover:border-blue-400 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
+        @click="toggleDropdown"
+      >
         <div class="flex items-center space-x-2 md:space-x-3">
-          <img src="@/assets/square-pattern.png" alt="Organization" class="w-10 h-6 md:w-14 md:h-9 rounded-md">
-          <img src="@/assets/profile-picture-placeholder.png" alt="Profile" class="w-6 h-6 md:w-9 md:h-9 rounded-full">
+          <img src="@/assets/square-pattern.png" alt="Organization" class="w-10 h-6 md:w-14 md:h-9 rounded-md object-cover">
+          <img src="@/assets/profile-picture-placeholder.png" alt="Profile" class="w-6 h-6 md:w-9 md:h-9 rounded-full object-cover border-2 border-white shadow-sm">
         </div>
-        <img
-          src="https://img.icons8.com/?size=200&id=2760&format=png&color=000000"
-          alt="Arrow Down"
-          class="w-3 h-3 md:w-4 md:h-4 cursor-pointer"
-          @click="toggleDropdown"
-        />
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2 transition-transform duration-300" 
+          :class="{ 'rotate-180': isDropdownOpen }"
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
       </div>
+      
       <!-- Menú desplegable con transición usando Vue y Tailwind -->
       <transition
-        enter-active-class="transition transform duration-300 ease-in-out"
-        enter-from-class="scale-y-0 opacity-0"
-        enter-to-class="scale-y-100 opacity-100"
-        leave-active-class="transition transform duration-300 ease-in-out"
-        leave-from-class="scale-y-100 opacity-100"
-        leave-to-class="scale-y-0 opacity-0"
+        enter-active-class="transition transform duration-300 ease-out"
+        enter-from-class="scale-95 opacity-0"
+        enter-to-class="scale-100 opacity-100"
+        leave-active-class="transition transform duration-200 ease-in"
+        leave-from-class="scale-100 opacity-100"
+        leave-to-class="scale-95 opacity-0"
       >
         <div
           v-if="isDropdownOpen"
           ref="dropdownMenu"
-          class="absolute right-0 mt-32 md:mt-32 bg-white shadow-lg rounded-lg w-48 border border-gray-300 z-50 transform origin-top"
+          class="absolute right-0 top-full mt-2 bg-white shadow-xl rounded-lg w-56 border border-gray-200 z-50 overflow-hidden"
         >
+          <div class="py-2 px-3 bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-200">
+            <p class="text-sm font-medium text-gray-600">Conectado como</p>
+            <p class="text-blue-700 font-bold truncate">usuario@soowe.com</p>
+          </div>
           <ul>
-            <li @click="goToProfile" class="px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 transition duration-200 ease-in-out">
+            <li @click="goToProfile" class="px-4 py-3 text-primary cursor-pointer hover:bg-blue-50 transition-colors duration-200 ease-in-out flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
               Mi perfil
             </li>
-            <li @click="openLogoutModal" class="px-4 py-2 text-primary cursor-pointer hover:bg-gray-100 transition duration-200 ease-in-out">
+            <li @click="openLogoutModal" class="px-4 py-3 text-red-600 cursor-pointer hover:bg-red-50 transition-colors duration-200 ease-in-out flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
               Cerrar sesión
             </li>
           </ul>
@@ -82,29 +110,80 @@
     </div>
 
     <!-- Menú de hamburguesa con animación (móvil) -->
-    <div 
-      class="absolute top-16 left-0 w-full bg-white shadow-xl rounded-lg border border-gray-300 z-30 md:hidden 
-             transform transition-all duration-300 ease-in-out origin-top"
-      :class="isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 invisible'"
+    <transition
+      enter-active-class="transition-all duration-300 ease-out"
+      enter-from-class="opacity-0 -translate-y-4"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition-all duration-200 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-4"
     >
-      <ul class="space-y-2 p-3 text-base font-bold text-primary">
-        <li v-for="item in Menu" :key="item.name">
-          <router-link 
-            :to="item.route" 
-            class="block p-2 hover:bg-gray-200 rounded-lg transition duration-300 ease-in-out"
-            :class="{ 'text-blue-500': isActive(item.route) }"
-            @click="closeMenu"
-          >
-            {{ item.name }}
-          </router-link>
-        </li>
-      </ul>
-    </div>
+      <div 
+        v-if="isMenuOpen"
+        class="absolute top-16 left-0 w-full bg-white shadow-xl rounded-lg border border-gray-200 z-30 md:hidden"
+      >
+        <ul class="space-y-1 p-3">
+          <li v-for="item in Menu" :key="item.name">
+            <router-link 
+              :to="item.route" 
+              class="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-200 ease-in-out font-bold"
+              :class="{ 'bg-blue-50 text-blue-600': isActive(item.route), 'text-primary': !isActive(item.route) }"
+              @click="closeMenu"
+            >
+              <span v-if="item.name === 'Dashboard'" class="mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span v-else-if="item.name === 'Enfermeros'" class="mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span v-else-if="item.name === 'Solicitudes'" class="mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                  <line x1="12" y1="11" x2="12" y2="17"></line>
+                  <line x1="9" y1="14" x2="15" y2="14"></line>
+                </svg>
+              </span>
+              {{ item.name }}
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </transition>
 
     <!-- Botón del menú de hamburguesa -->
-    <button type="button" class="block focus:outline-none md:hidden z-30" @click="toggleMenu">
-      <img v-if="isMenuOpen" src="https://img.icons8.com/ios-filled/100/0/0/0/delete-sign.png" alt="close" width="30" height="30">
-      <img v-else src="https://img.icons8.com/ios-filled/100/0/0/0/menu--v6.png" alt="menu" width="30" height="30">
+    <button 
+      type="button" 
+      class="relative block focus:outline-none md:hidden z-30 w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+      @click="toggleMenu"
+      aria-label="Menú de navegación"
+    >
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-6 h-6 relative">
+          <span 
+            class="absolute h-0.5 w-6 bg-primary rounded-sm transition-all duration-300 ease-in-out"
+            :class="isMenuOpen ? 'rotate-45 top-3' : 'top-1'"
+          ></span>
+          <span 
+            class="absolute h-0.5 w-6 bg-primary rounded-sm top-3 transition-all duration-300 ease-in-out"
+            :class="isMenuOpen ? 'opacity-0' : 'opacity-100'"
+          ></span>
+          <span 
+            class="absolute h-0.5 w-6 bg-primary rounded-sm transition-all duration-300 ease-in-out"
+            :class="isMenuOpen ? '-rotate-45 top-3' : 'top-5'"
+          ></span>
+        </div>
+      </div>
     </button>
 
     <!-- Modal de confirmación de cierre de sesión -->
@@ -119,7 +198,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import LogoutModal from '@/components/DashboardComponents/LogoutModal.vue'; // Asegúrate de importar el modal
+import LogoutModal from '@/components/DashboardComponents/LogoutModal.vue';
 
 const Menu = ref([
   { name: 'Dashboard', route: '/dashboard' },
@@ -155,7 +234,8 @@ const isActive = (routeName) => {
 };
 
 const handleClickOutside = (event) => {
-  if (profileMenu.value && !profileMenu.value.contains(event.target) && dropdownMenu.value && !dropdownMenu.value.contains(event.target)) {
+  if (profileMenu.value && !profileMenu.value.contains(event.target) && 
+      (!dropdownMenu.value || !dropdownMenu.value.contains(event.target))) {
     isDropdownOpen.value = false;
   }
 };
@@ -170,10 +250,14 @@ onBeforeUnmount(() => {
 
 const goToProfile = () => {
   console.log('Go to profile page');
+  // Implementar navegación al perfil
+  // router.push('/profile');
+  isDropdownOpen.value = false;
 };
 
 const openLogoutModal = () => {
   isLogoutModalOpen.value = true;
+  isDropdownOpen.value = false;
 };
 
 const closeLogoutModal = () => {
@@ -188,5 +272,26 @@ const confirmLogout = () => {
 </script>
 
 <style scoped>
-/* Estilos adicionales si los necesitas */
+/* Animación para el logo */
+@keyframes pulse-subtle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Efecto de brillo para los botones */
+.hover-glow:hover {
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+/* Animación para las notificaciones */
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
 </style>
+

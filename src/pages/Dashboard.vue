@@ -1,31 +1,33 @@
 <template>
-  <div>
+  <div class="min-h-screen bg-gray-50">
     <NavBar />
-    <div class="bg-gray-100 min-h-screen">
-      <div class="p-6 mx-20">
-        <header class="flex justify-between items-center mb-6">
-          <ViewButtons :selectedView="selectedView" :changeView="changeView" />
-        </header>
-
-        <!-- Resumen de estadísticas -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <StatsCard title="Enfermeros Registrados" :value="nurseCount" />
-          <StatsCard title="Solicitudes Entrantes" :value="incomingRequests" />
-          <StatsCard title="Solicitudes Completadas" :value="completedRequests" />
-          <StatsCard title="Dinero Neto Generado" :value="netRevenue" />
+    <div class="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
+      <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Panel de Control</h1>
+          <p class="text-gray-500">Bienvenido de nuevo, <span class="font-medium text-blue-600">Administrador</span></p>
         </div>
+        <ViewButtons :selectedView="selectedView" :changeView="changeView" />
+      </header>
 
-        <!-- Gráficos -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <ChartCard title="Enfermeros dados de alta" :chartOptions="NaN" />
-          <ChartCard title="Dinero generado" :chartOptions="NaN" />
-          <ChartCard title="Solicitudes Asignadas" :chartOptions="NaN" />
-        </div>
+      <!-- Resumen de estadísticas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+        <StatsCard title="Enfermeros Registrados" :value="nurseCount" />
+        <StatsCard title="Solicitudes Entrantes" :value="incomingRequests" />
+        <StatsCard title="Solicitudes Completadas" :value="completedRequests" />
+        <StatsCard title="Dinero Neto Generado" :value="netRevenue" />
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <ChartCard title="Estatus de Solicitudes" :chartOptions="NaN" />
-          <ChartCard title="Demográfico" :chartOptions="NaN" />
-        </div>
+      <!-- Gráficos -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+        <ChartCard title="Enfermeros dados de alta" :chartOptions="nursesChartOptions" />
+        <ChartCard title="Dinero generado" :chartOptions="patientsChartOptions" />
+        <ChartCard title="Solicitudes Asignadas" :chartOptions="assignedRequestsChartOptions" />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <ChartCard title="Estatus de Solicitudes" :chartOptions="statusChartOptions" />
+        <ChartCard title="Demográfico" :chartOptions="demographicsChartOptions" />
       </div>
     </div>
   </div>
@@ -33,60 +35,276 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getToken, getOrganizationId } from '../api/auth'; // Ajusta la ruta
-import api from '../api/conexionapi'; // Ajusta la ruta
+import { getToken, getOrganizationId } from '../api/auth';
+import api from '../api/conexionapi';
 import * as echarts from 'echarts';
 
 // Importar componentes
-import NavBar from '@/components/DashboardComponents/NavBar.vue'; // Ajusta la ruta
-import ViewButtons from '@/components/DashboardComponents/ViewButtons.vue'; // Ajusta la ruta
-import StatsCard from '@/components/DashboardComponents/StatsCard.vue'; // Ajusta la ruta
-import ChartCard from '@/components/DashboardComponents/ChartCard.vue'; // Ajusta la ruta
+import NavBar from '@/components/DashboardComponents/NavBar.vue';
+import ViewButtons from '@/components/DashboardComponents/ViewButtons.vue';
+import StatsCard from '@/components/DashboardComponents/StatsCard.vue';
+import ChartCard from '@/components/DashboardComponents/ChartCard.vue';
 
 // Variables reactivas
 const selectedView = ref('organization');
 const nurseCount = ref(0);
 const incomingRequests = ref(0);
 const completedRequests = ref(0);
-const netRevenue = ref(0); // Dinero neto generado
+const netRevenue = ref(0);
 
-// Opciones de gráficos (inicialmente vacías, se actualizarán dinámicamente)
+// Opciones de gráficos
 const patientsChartOptions = ref({
-  xAxis: { type: 'category', data: [] },
-  yAxis: { type: 'value' },
-  series: [{ name: 'Pacientes', type: 'bar', data: [], color: '#3182CE' }]
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: { 
+    type: 'category', 
+    data: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  yAxis: { 
+    type: 'value',
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  series: [{ 
+    name: 'Ingresos', 
+    type: 'bar', 
+    data: [2500, 3800, 5200, 4900, 7300, 9200], 
+    itemStyle: {
+      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: '#3b82f6' },
+        { offset: 1, color: '#60a5fa' }
+      ])
+    },
+    emphasis: {
+      itemStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: '#2563eb' },
+          { offset: 1, color: '#3b82f6' }
+        ])
+      }
+    }
+  }]
 });
 
 const nursesChartOptions = ref({
-  xAxis: { type: 'category', data: [] },
-  yAxis: { type: 'value' },
-  series: [{ name: 'Enfermeros', type: 'line', data: [], color: '#2C5282' }]
+  tooltip: {
+    trigger: 'axis'
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: { 
+    type: 'category', 
+    data: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  yAxis: { 
+    type: 'value',
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  series: [{ 
+    name: 'Enfermeros', 
+    type: 'line', 
+    smooth: true,
+    data: [5, 8, 12, 15, 22, 28], 
+    lineStyle: {
+      width: 3,
+      color: '#2563eb'
+    },
+    areaStyle: {
+      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: 'rgba(37, 99, 235, 0.5)' },
+        { offset: 1, color: 'rgba(37, 99, 235, 0.1)' }
+      ])
+    },
+    symbol: 'circle',
+    symbolSize: 8,
+    itemStyle: {
+      color: '#2563eb',
+      borderColor: '#fff',
+      borderWidth: 2
+    }
+  }]
 });
 
 const assignedRequestsChartOptions = ref({
-  xAxis: { type: 'category', data: [] },
-  yAxis: { type: 'value' },
-  series: [{ name: 'Solicitudes', type: 'bar', data: [], color: '#D69E2E' }]
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: { 
+    type: 'category', 
+    data: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  yAxis: { 
+    type: 'value',
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  series: [{ 
+    name: 'Solicitudes', 
+    type: 'bar', 
+    data: [12, 19, 23, 18, 25, 31], 
+    itemStyle: {
+      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: '#f59e0b' },
+        { offset: 1, color: '#fbbf24' }
+      ])
+    },
+    emphasis: {
+      itemStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: '#d97706' },
+          { offset: 1, color: '#f59e0b' }
+        ])
+      }
+    }
+  }]
 });
 
 const statusChartOptions = ref({
-  tooltip: { trigger: 'item' },
-  legend: { top: '5%', left: 'center' },
+  tooltip: { 
+    trigger: 'item',
+    formatter: '{a} <br/>{b}: {c} ({d}%)'
+  },
+  legend: { 
+    orient: 'vertical',
+    right: 10,
+    top: 'center',
+    textStyle: {
+      color: '#64748b'
+    }
+  },
   series: [
     {
       name: 'Estatus',
       type: 'pie',
-      radius: '50%',
-      data: [],
-      color: ['#38A169', '#E53E3E', '#DD6B20']
+      radius: ['50%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false,
+        position: 'center'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: '18',
+          fontWeight: 'bold'
+        }
+      },
+      labelLine: {
+        show: false
+      },
+      data: [
+        { value: 48, name: 'Completadas', itemStyle: { color: '#10b981' } },
+        { value: 32, name: 'En Proceso', itemStyle: { color: '#3b82f6' } },
+        { value: 20, name: 'Canceladas', itemStyle: { color: '#ef4444' } }
+      ]
     }
   ]
 });
 
 const demographicsChartOptions = ref({
-  xAxis: { type: 'category', data: [] },
-  yAxis: { type: 'value' },
-  series: [{ name: 'Demográfico', type: 'bar', data: [], color: '#805AD5' }]
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: {
+    type: 'value',
+    axisLabel: {
+      color: '#64748b'
+    },
+    splitLine: {
+      lineStyle: {
+        type: 'dashed'
+      }
+    }
+  },
+  yAxis: {
+    type: 'category',
+    data: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+    axisLabel: {
+      color: '#64748b'
+    }
+  },
+  series: [
+    {
+      name: 'Hombres',
+      type: 'bar',
+      stack: 'total',
+      label: {
+        show: true
+      },
+      emphasis: {
+        focus: 'series'
+      },
+      data: [8, 15, 12, 10, 7, 4],
+      itemStyle: {
+        color: '#3b82f6'
+      }
+    },
+    {
+      name: 'Mujeres',
+      type: 'bar',
+      stack: 'total',
+      label: {
+        show: true
+      },
+      emphasis: {
+        focus: 'series'
+      },
+      data: [10, 18, 15, 12, 9, 6],
+      itemStyle: {
+        color: '#ec4899'
+      }
+    }
+  ]
 });
 
 // Función para cambiar la vista
@@ -155,82 +373,6 @@ const fetchCompletedRequests = async () => {
   }
 };
 
-// Función para obtener y procesar datos de enfermeros por mes
-const fetchEnfermerosPorMes = async () => {
-  try {
-    const token = getToken();
-    const organizationId = getOrganizationId();
-
-    if (!token || !organizationId) {
-      console.error("Token u organización no válidos");
-      return;
-    }
-
-    const response = await api.get('/api/mobile/enfermeros', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    console.log("Respuesta completa de la API:", response.data); // Verificar datos
-
-    if (Array.isArray(response.data)) {
-      const enfermerosFiltrados = response.data.filter(
-        enfermero => String(enfermero.organizacion_id) === String(organizationId)
-      );
-
-      console.log("Enfermeros filtrados:", enfermerosFiltrados);
-
-      // Objeto para agrupar enfermeros por mes (clave: 'YYYY-MM')
-      const enfermerosPorMes = {};
-
-      enfermerosFiltrados.forEach(enfermero => {
-        if (!enfermero.fecha_registro) {
-          console.warn("Enfermero sin fecha de registro:", enfermero);
-          return;
-        }
-
-        // Convertir la fecha a un objeto Date
-        const fecha = new Date(enfermero.fecha_registro);
-        if (isNaN(fecha)) {
-          console.warn("Fecha inválida:", enfermero.fecha_registro);
-          return;
-        }
-
-        // Formato 'YYYY-MM' para agrupar
-        const mesClave = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
-        enfermerosPorMes[mesClave] = (enfermerosPorMes[mesClave] || 0) + 1;
-      });
-
-      // Ordenar los meses correctamente
-      const mesesOrdenados = Object.keys(enfermerosPorMes).sort((a, b) => new Date(a) - new Date(b));
-
-      // Convertir a formato 'MMM YYYY' para mostrar en la gráfica
-      const etiquetasMeses = mesesOrdenados.map(mes => {
-        const [year, month] = mes.split('-');
-        return new Date(year, month - 1).toLocaleString('default', { month: 'short', year: 'numeric' });
-      });
-
-      // Obtener valores en el orden correcto
-      const valoresEnfermeros = mesesOrdenados.map(mes => enfermerosPorMes[mes]);
-
-      // Mostrar los datos en consola para depuración
-      console.log("Meses Ordenados:", mesesOrdenados);
-      console.log("Etiquetas Meses:", etiquetasMeses);
-      console.log("Valores Enfermeros:", valoresEnfermeros);
-
-      // Actualizar opciones de la gráfica
-      nursesChartOptions.value = {
-        xAxis: { type: 'category', data: etiquetasMeses },
-        yAxis: { type: 'value' },
-        series: [{ name: 'Enfermeros', type: 'line', data: valoresEnfermeros, color: '#2C5282' }]
-      };
-    } else {
-      console.error("Respuesta no es un array:", response.data);
-    }
-  } catch (error) {
-    console.error('Error al obtener enfermeros por mes:', error.response?.data || error);
-  }
-};
-
 // Función para obtener enfermeros
 const fetchEnfermeros = async () => {
   try {
@@ -264,6 +406,23 @@ onMounted(() => {
   fetchEnfermeros();
   fetchIncomingRequests();
   fetchCompletedRequests();
-  fetchEnfermerosPorMes();
 });
 </script>
+
+<style scoped>
+/* Animación de entrada para los componentes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.grid > * {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.grid > *:nth-child(1) { animation-delay: 0.1s; }
+.grid > *:nth-child(2) { animation-delay: 0.2s; }
+.grid > *:nth-child(3) { animation-delay: 0.3s; }
+.grid > *:nth-child(4) { animation-delay: 0.4s; }
+</style>
+

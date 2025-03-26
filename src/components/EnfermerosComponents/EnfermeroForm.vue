@@ -1,252 +1,320 @@
 <template>
-  <!-- Contenedor principal (se oculta cuando el modal de éxito está visible) -->
-  <div v-if="!showSuccessModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <!-- Formulario de Registro -->
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto max-h-[90vh] overflow-y-auto">
-      <form @submit.prevent="onSubmit">
-        <!-- 📌 Grid Responsivo -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Nombre -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Nombre</label>
-            <input 
-              type="text" 
-              v-model="form.nombre" 
-              required 
-              class="mt-1 block w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-            />
+  <form @submit.prevent="onSubmit" class="space-y-6">
+    <!-- Grid Responsivo -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <!-- Nombre -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
           </div>
+          <input 
+            type="text" 
+            v-model="form.nombre" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+            placeholder="Ingrese nombre"
+          />
+        </div>
+      </div>
 
-          <!-- Apellido -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Apellido</label>
-            <input 
-              type="text" 
-              v-model="form.apellido" 
-              required 
-              class="mt-1 block w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-            />
+      <!-- Apellido -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
           </div>
+          <input 
+            type="text" 
+            v-model="form.apellido" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+            placeholder="Ingrese apellido"
+          />
+        </div>
+      </div>
 
-          <!-- Especialidad -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Especialidad</label>
-            <input 
-              type="text" 
-              v-model="form.especialidad" 
-              required 
-              class="mt-1 block w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-            />
+      <!-- Especialidad -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Especialidad</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+            </svg>
           </div>
+          <select 
+            v-model="form.especialidad" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+          >
+            <option value="" disabled selected>Seleccione especialidad</option>
+            <option value="Enfermería General">Enfermería General</option>
+            <option value="Pediatría">Pediatría</option>
+            <option value="Geriatría">Geriatría</option>
+            <option value="Cuidados Intensivos">Cuidados Intensivos</option>
+            <option value="Obstetricia">Obstetricia</option>
+            <option value="Oncología">Oncología</option>
+          </select>
+        </div>
+      </div>
 
-          <!-- Teléfono -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Teléfono</label>
-            <div class="relative">
-              <input 
-                type="tel" 
-                v-model="form.telefono" 
-                @input="validatePhone" 
-                required 
-                class="mt-1 block w-full rounded border-gray-300 p-2 pr-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-              />
-              <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg 
-                  v-if="phoneError" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-red-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-                <svg 
-                  v-else-if="form.telefono && !phoneError" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-green-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-              </span>
-            </div>
-            <p v-if="phoneError" class="text-red-500 text-sm">{{ phoneError }}</p>
+      <!-- Teléfono -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+            </svg>
           </div>
-
-          <!-- Correo -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Correo</label>
-            <div class="relative">
-              <input 
-                type="email" 
-                v-model="form.correo" 
-                @input="validateEmail" 
-                required 
-                class="mt-1 block w-full rounded border-gray-300 p-2 pr-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-              />
-              <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg 
-                  v-if="emailError" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-red-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-                <svg 
-                  v-else-if="form.correo && !emailError" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-green-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-              </span>
-            </div>
-            <p v-if="emailError" class="text-red-500 text-sm">{{ emailError }}</p>
-          </div>
-
-          <!-- Contraseña -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Contraseña</label>
-            <div class="relative">
-              <input 
-                :type="showPassword ? 'text' : 'password'" 
-                v-model="form.contrasena" 
-                @input="validatePassword" 
-                required 
-                class="mt-1 block w-full rounded border-gray-300 p-2 pr-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-              />
-              <span 
-                class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                @click="togglePasswordVisibility"
-              >
-                <svg 
-                  v-if="showPassword" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-gray-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                </svg>
-                <svg 
-                  v-else 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-gray-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd" />
-                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                </svg>
-              </span>
-            </div>
-            <p v-if="passwordError" class="text-red-500 text-sm">{{ passwordError }}</p>
-          </div>
-
-          <!-- Confirmar Contraseña -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
-            <div class="relative">
-              <input 
-                :type="showConfirmPassword ? 'text' : 'password'" 
-                v-model="confirmPassword" 
-                @input="validateConfirmPassword" 
-                required 
-                class="mt-1 block w-full rounded border-gray-300 p-2 pr-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-              />
-              <span 
-                class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                @click="toggleConfirmPasswordVisibility"
-              >
-                <svg 
-                  v-if="showConfirmPassword" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-gray-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                </svg>
-                <svg 
-                  v-else 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  class="h-5 w-5 text-gray-500" 
-                  viewBox="0 0 20 20" 
-                  fill="currentColor"
-                >
-                  <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd" />
-                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                </svg>
-              </span>
-            </div>
-            <p v-if="confirmPasswordError" class="text-red-500 text-sm">{{ confirmPasswordError }}</p>
-          </div>
-
-          <!-- Campo de Foto de Perfil -->
-          <div class="sm:col-span-2">
-            <label class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
-            <input 
-              type="file" 
-              @change="handleFileUpload" 
-              accept=".jpg, .jpeg, .png" 
-              class="mt-1 block w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" 
-            />
+          <input 
+            type="tel" 
+            v-model="form.telefono" 
+            @input="validatePhone" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+            placeholder="Ingrese teléfono (10 dígitos)"
+            :class="{'border-red-300 focus:ring-red-500 focus:border-red-500': phoneError}"
+          />
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <svg 
+              v-if="phoneError" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-red-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <svg 
+              v-else-if="form.telefono && !phoneError" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-green-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
           </div>
         </div>
+        <p v-if="phoneError" class="mt-1 text-sm text-red-600">{{ phoneError }}</p>
+      </div>
 
-        <!-- 📌 Botón de Registro -->
-        <div class="flex justify-end mt-6">
+      <!-- Correo -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            </svg>
+          </div>
+          <input 
+            type="email" 
+            v-model="form.correo" 
+            @input="validateEmail" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+            placeholder="correo@ejemplo.com"
+            :class="{'border-red-300 focus:ring-red-500 focus:border-red-500': emailError}"
+          />
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <svg 
+              v-if="emailError" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-red-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <svg 
+              v-else-if="form.correo && !emailError" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-green-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <p v-if="emailError" class="mt-1 text-sm text-red-600">{{ emailError }}</p>
+      </div>
+
+      <!-- Contraseña -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input 
+            :type="showPassword ? 'text' : 'password'" 
+            v-model="form.contrasena" 
+            @input="validatePassword" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+            placeholder="Ingrese contraseña"
+            :class="{'border-red-300 focus:ring-red-500 focus:border-red-500': passwordError}"
+          />
           <button 
-            type="submit" 
-            :disabled="isSubmitting" 
-            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md transition"
+            type="button"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            @click="togglePasswordVisibility"
           >
-            {{ isSubmitting ? 'Creando...' : 'Registrar Enfermero' }}
+            <svg 
+              v-if="showPassword" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-gray-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+              <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+            </svg>
+            <svg 
+              v-else 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-gray-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd" />
+              <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+            </svg>
           </button>
         </div>
-
-        <!-- 📌 Animación de Carga -->
-        <div v-if="isSubmitting" class="mt-4">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+        <p v-if="passwordError" class="mt-1 text-sm text-red-600">{{ passwordError }}</p>
+        
+        <!-- Indicador de fortaleza de contraseña -->
+        <div v-if="form.contrasena" class="mt-2">
+          <div class="flex items-center">
+            <div class="w-full bg-gray-200 rounded-full h-1.5">
+              <div 
+                class="h-1.5 rounded-full transition-all duration-300"
+                :class="{
+                  'w-1/4 bg-red-500': passwordStrength === 'weak',
+                  'w-2/4 bg-yellow-500': passwordStrength === 'medium',
+                  'w-3/4 bg-blue-500': passwordStrength === 'strong',
+                  'w-full bg-green-500': passwordStrength === 'very-strong'
+                }"
+              ></div>
+            </div>
+            <span class="ml-2 text-xs text-gray-500">{{ passwordStrengthText }}</span>
+          </div>
         </div>
-      </form>
+      </div>
+
+      <!-- Confirmar Contraseña -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input 
+            :type="showConfirmPassword ? 'text' : 'password'" 
+            v-model="confirmPassword" 
+            @input="validateConfirmPassword" 
+            required 
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" 
+            placeholder="Confirme contraseña"
+            :class="{'border-red-300 focus:ring-red-500 focus:border-red-500': confirmPasswordError}"
+          />
+          <button 
+            type="button"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            @click="toggleConfirmPasswordVisibility"
+          >
+            <svg 
+              v-if="showConfirmPassword" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-gray-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+              <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+            </svg>
+            <svg 
+              v-else 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-5 w-5 text-gray-500" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd" />
+              <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+            </svg>
+          </button>
+        </div>
+        <p v-if="confirmPasswordError" class="mt-1 text-sm text-red-600">{{ confirmPasswordError }}</p>
+      </div>
     </div>
-  </div>
 
-  <!-- Modal de Éxito (fuera del contenedor del formulario) -->
-  <div v-if="showSuccessModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
-      <div class="text-center">
-        <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
-        <h3 class="mt-2 text-lg font-medium text-gray-900">¡Éxito!</h3>
-        <p class="mt-1 text-sm text-gray-500">El enfermero se ha registrado correctamente.</p>
-        <div class="mt-4">
-          <button 
-            @click="closeModal" 
-            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Cerrar
-          </button>
+    <!-- Campo de Foto de Perfil -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Foto de Perfil</label>
+      <div class="flex items-center">
+        <div class="flex-shrink-0 mr-4">
+          <img 
+            :src="previewImage || 'https://via.placeholder.com/100?text=Foto'" 
+            alt="Vista previa" 
+            class="h-20 w-20 rounded-full object-cover border border-gray-200"
+          />
+        </div>
+        <div class="flex-1">
+          <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+            <span>Subir una foto</span>
+            <input 
+              id="file-upload" 
+              name="file-upload" 
+              type="file" 
+              class="sr-only" 
+              @change="handleFileUpload" 
+              accept=".jpg, .jpeg, .png"
+            />
+          </label>
+          <p class="text-xs text-gray-500 mt-1">PNG, JPG o JPEG hasta 5MB</p>
+          <p v-if="fileError" class="mt-1 text-sm text-red-600">{{ fileError }}</p>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Botón de Registro -->
+    <div class="flex justify-end">
+      <button 
+        type="submit" 
+        :disabled="isSubmitting || hasErrors" 
+        class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
+      >
+        <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ isSubmitting ? 'Registrando...' : 'Registrar Enfermero' }}
+      </button>
+    </div>
+  </form>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { addEnfermero } from '../../api/enfermeros'
+import { reactive, ref, computed } from 'vue';
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submit']);
 
 const form = reactive({
   nombre: '',
@@ -256,72 +324,170 @@ const form = reactive({
   correo: '',
   contrasena: '',
   fotoPerfil: null
-})
+});
 
-const confirmPassword = ref('')
-const phoneError = ref('')
-const emailError = ref('')
-const passwordError = ref('')
-const confirmPasswordError = ref('')
-const isSubmitting = ref(false)
-const showSuccessModal = ref(false)
-const showPassword = ref(false)
-const showConfirmPassword = ref(false)
+const confirmPassword = ref('');
+const phoneError = ref('');
+const emailError = ref('');
+const passwordError = ref('');
+const confirmPasswordError = ref('');
+const fileError = ref('');
+const isSubmitting = ref(false);
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+const previewImage = ref(null);
 
+// Validación de teléfono
 function validatePhone() {
-  form.telefono = form.telefono.replace(/\D/g, '')
-  if (form.telefono.length > 10) {
-    phoneError.value = 'El teléfono no debe exceder los 10 dígitos.'
+  form.telefono = form.telefono.replace(/\D/g, '');
+  if (form.telefono.length > 0 && form.telefono.length !== 10) {
+    phoneError.value = 'El teléfono debe tener 10 dígitos.';
   } else {
-    phoneError.value = ''
+    phoneError.value = '';
   }
 }
 
+// Validación de correo
 function validateEmail() {
-  if (!form.correo.includes('@')) {
-    emailError.value = 'El correo debe contener un "@".'
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (form.correo && !emailRegex.test(form.correo)) {
+    emailError.value = 'Ingrese un correo electrónico válido.';
   } else {
-    emailError.value = ''
+    emailError.value = '';
   }
 }
 
+// Validación de contraseña
 function validatePassword() {
-  const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*]).{12,}$/
-  if (!passwordRegex.test(form.contrasena)) {
-    passwordError.value = 'La contraseña debe tener al menos 12 caracteres, incluyendo un dígito, una mayúscula y un carácter especial.'
+  const hasDigit = /\d/.test(form.contrasena);
+  const hasUppercase = /[A-Z]/.test(form.contrasena);
+  const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
+  const isLongEnough = form.contrasena.length >= 8;
+  
+  if (form.contrasena && !isLongEnough) {
+    passwordError.value = 'La contraseña debe tener al menos 8 caracteres.';
+  } else if (form.contrasena && !(hasDigit && hasUppercase && hasSpecial)) {
+    passwordError.value = 'La contraseña debe incluir al menos un número, una mayúscula y un carácter especial.';
   } else {
-    passwordError.value = ''
+    passwordError.value = '';
+  }
+  
+  // Actualizar validación de confirmación si ya hay un valor
+  if (confirmPassword.value) {
+    validateConfirmPassword();
   }
 }
 
+// Validación de confirmación de contraseña
 function validateConfirmPassword() {
-  if (form.contrasena !== confirmPassword.value) {
-    confirmPasswordError.value = 'Las contraseñas no coinciden.'
+  if (confirmPassword.value && form.contrasena !== confirmPassword.value) {
+    confirmPasswordError.value = 'Las contraseñas no coinciden.';
   } else {
-    confirmPasswordError.value = ''
+    confirmPasswordError.value = '';
   }
 }
 
+// Fortaleza de la contraseña
+const passwordStrength = computed(() => {
+  if (!form.contrasena) return '';
+  
+  const hasDigit = /\d/.test(form.contrasena);
+  const hasUppercase = /[A-Z]/.test(form.contrasena);
+  const hasLowercase = /[a-z]/.test(form.contrasena);
+  const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
+  const length = form.contrasena.length;
+  
+  let score = 0;
+  if (length >= 8) score += 1;
+  if (length >= 12) score += 1;
+  if (hasDigit) score += 1;
+  if (hasUppercase) score += 1;
+  if (hasLowercase) score += 1;
+  if (hasSpecial) score += 1;
+  
+  if (score <= 2) return 'weak';
+  if (score <= 3) return 'medium';
+  if (score <= 4) return 'strong';
+  return 'very-strong';
+});
+
+const passwordStrengthText = computed(() => {
+  switch (passwordStrength.value) {
+    case 'weak': return 'Débil';
+    case 'medium': return 'Media';
+    case 'strong': return 'Fuerte';
+    case 'very-strong': return 'Muy fuerte';
+    default: return '';
+  }
+});
+
+// Verificar si hay errores
+const hasErrors = computed(() => {
+  return phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value || fileError.value;
+});
+
+// Alternar visibilidad de contraseña
 function togglePasswordVisibility() {
-  showPassword.value = !showPassword.value
+  showPassword.value = !showPassword.value;
 }
 
+// Alternar visibilidad de confirmación de contraseña
 function toggleConfirmPasswordVisibility() {
-  showConfirmPassword.value = !showConfirmPassword.value
+  showConfirmPassword.value = !showConfirmPassword.value;
 }
 
-async function onSubmit() {
-  validatePhone()
-  validateEmail()
-  validatePassword()
-  validateConfirmPassword()
-
-  if (phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
-    return
+// Manejar carga de archivo
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    form.fotoPerfil = null;
+    previewImage.value = null;
+    fileError.value = '';
+    return;
   }
+  
+  // Validar tipo de archivo
+  if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+    fileError.value = 'Por favor, sube una imagen válida (jpg, jpeg, png).';
+    form.fotoPerfil = null;
+    previewImage.value = null;
+    return;
+  }
+  
+  // Validar tamaño de archivo (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    fileError.value = 'La imagen no debe exceder los 5MB.';
+    form.fotoPerfil = null;
+    previewImage.value = null;
+    return;
+  }
+  
+  fileError.value = '';
+  form.fotoPerfil = file;
+  
+  // Crear vista previa
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImage.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
-  isSubmitting.value = true
-
+// Enviar formulario
+async function onSubmit() {
+  // Validar todos los campos
+  validatePhone();
+  validateEmail();
+  validatePassword();
+  validateConfirmPassword();
+  
+  // Verificar si hay errores
+  if (hasErrors.value) {
+    return;
+  }
+  
+  isSubmitting.value = true;
+  
   try {
     const formData = {
       nombre: form.nombre,
@@ -331,34 +497,58 @@ async function onSubmit() {
       correo: form.correo,
       contrasena: form.contrasena,
       fotoPerfil: form.fotoPerfil,
-    }
-
-    const response = await addEnfermero(formData)
-
-    if (response) {
-      console.log('✅ Enfermero creado correctamente:', response)
-      showSuccessModal.value = true
-    }
+    };
+    
+    // Emitir evento al componente padre
+    emit('submit', formData);
+    
+    // Resetear formulario
+    resetForm();
   } catch (error) {
-    console.error('❌ Error al crear enfermero:', error)
-    alert('Hubo un error al crear el enfermero. Inténtalo de nuevo.')
+    console.error('Error al enviar formulario:', error);
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 
-function handleFileUpload(event) {
-  const file = event.target.files[0]
-  if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-    form.fotoPerfil = file
-  } else {
-    alert('Por favor, sube una imagen válida (jpg, jpeg, png).')
-    form.fotoPerfil = null
-  }
-}
-
-function closeModal() {
-  showSuccessModal.value = false
-  emit('close') // Emitir evento para cerrar el formulario completo
+// Resetear formulario
+function resetForm() {
+  form.nombre = '';
+  form.apellido = '';
+  form.especialidad = '';
+  form.telefono = '';
+  form.correo = '';
+  form.contrasena = '';
+  form.fotoPerfil = null;
+  confirmPassword.value = '';
+  previewImage.value = null;
+  phoneError.value = '';
+  emailError.value = '';
+  passwordError.value = '';
+  confirmPasswordError.value = '';
+  fileError.value = '';
 }
 </script>
+
+<style scoped>
+/* Animación para los campos de formulario al enfocar */
+input:focus, select:focus {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+/* Animación para el botón de envío */
+button[type="submit"]:not(:disabled):hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Animación para la vista previa de la imagen */
+img {
+  transition: all 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+</style>
+
