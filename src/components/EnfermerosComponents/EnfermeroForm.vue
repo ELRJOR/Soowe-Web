@@ -265,35 +265,6 @@
       </div>
     </div>
 
-    <!-- Campo de Foto de Perfil -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Foto de Perfil</label>
-      <div class="flex items-center">
-        <div class="flex-shrink-0 mr-4">
-          <img 
-            :src="previewImage || 'https://via.placeholder.com/100?text=Foto'" 
-            alt="Vista previa" 
-            class="h-20 w-20 rounded-full object-cover border border-gray-200"
-          />
-        </div>
-        <div class="flex-1">
-          <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-            <span>Subir una foto</span>
-            <input 
-              id="file-upload" 
-              name="file-upload" 
-              type="file" 
-              class="sr-only" 
-              @change="handleFileUpload" 
-              accept=".jpg, .jpeg, .png"
-            />
-          </label>
-          <p class="text-xs text-gray-500 mt-1">PNG, JPG o JPEG hasta 5MB</p>
-          <p v-if="fileError" class="mt-1 text-sm text-red-600">{{ fileError }}</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Botón de Registro -->
     <div class="flex justify-end">
       <button 
@@ -312,7 +283,8 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue';
+// Agregar la importación de onMounted al inicio del script
+import { reactive, ref, computed, onMounted } from 'vue';
 
 const emit = defineEmits(['submit']);
 
@@ -322,8 +294,7 @@ const form = reactive({
   especialidad: '',
   telefono: '',
   correo: '',
-  contrasena: '',
-  fotoPerfil: null
+  contrasena: ''
 });
 
 const confirmPassword = ref('');
@@ -331,16 +302,16 @@ const phoneError = ref('');
 const emailError = ref('');
 const passwordError = ref('');
 const confirmPasswordError = ref('');
-const fileError = ref('');
 const isSubmitting = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
-const previewImage = ref(null);
 
 // Validación de teléfono
 function validatePhone() {
   form.telefono = form.telefono.replace(/\D/g, '');
-  if (form.telefono.length > 0 && form.telefono.length !== 10) {
+  if (form.telefono.length === 0) {
+    phoneError.value = 'El teléfono es obligatorio.';
+  } else if (form.telefono.length !== 10) {
     phoneError.value = 'El teléfono debe tener 10 dígitos.';
   } else {
     phoneError.value = '';
@@ -350,7 +321,9 @@ function validatePhone() {
 // Validación de correo
 function validateEmail() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (form.correo && !emailRegex.test(form.correo)) {
+  if (!form.correo) {
+    emailError.value = 'El correo es obligatorio.';
+  } else if (!emailRegex.test(form.correo)) {
     emailError.value = 'Ingrese un correo electrónico válido.';
   } else {
     emailError.value = '';
@@ -363,15 +336,17 @@ function validatePassword() {
   const hasUppercase = /[A-Z]/.test(form.contrasena);
   const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
   const isLongEnough = form.contrasena.length >= 8;
-  
-  if (form.contrasena && !isLongEnough) {
+
+  if (!form.contrasena) {
+    passwordError.value = 'La contraseña es obligatoria.';
+  } else if (!isLongEnough) {
     passwordError.value = 'La contraseña debe tener al menos 8 caracteres.';
-  } else if (form.contrasena && !(hasDigit && hasUppercase && hasSpecial)) {
+  } else if (!(hasDigit && hasUppercase && hasSpecial)) {
     passwordError.value = 'La contraseña debe incluir al menos un número, una mayúscula y un carácter especial.';
   } else {
     passwordError.value = '';
   }
-  
+
   // Actualizar validación de confirmación si ya hay un valor
   if (confirmPassword.value) {
     validateConfirmPassword();
@@ -380,7 +355,9 @@ function validatePassword() {
 
 // Validación de confirmación de contraseña
 function validateConfirmPassword() {
-  if (confirmPassword.value && form.contrasena !== confirmPassword.value) {
+  if (!confirmPassword.value) {
+    confirmPasswordError.value = 'Debe confirmar la contraseña.';
+  } else if (form.contrasena !== confirmPassword.value) {
     confirmPasswordError.value = 'Las contraseñas no coinciden.';
   } else {
     confirmPasswordError.value = '';
@@ -423,7 +400,24 @@ const passwordStrengthText = computed(() => {
 
 // Verificar si hay errores
 const hasErrors = computed(() => {
-  return phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value || fileError.value;
+  // Verificar si hay mensajes de error
+  if (phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value) {
+    return true;
+  }
+  
+  // Verificar que todos los campos requeridos estén completos
+  if (!form.nombre || !form.apellido || !form.especialidad || 
+      !form.telefono || !form.correo || !form.contrasena || !confirmPassword.value) {
+    return true;
+  }
+  
+  // Verificar que las contraseñas coincidan
+  if (form.contrasena !== confirmPassword.value) {
+    return true;
+  }
+  
+  // Si pasa todas las validaciones, no hay errores
+  return false;
 });
 
 // Alternar visibilidad de contraseña
@@ -434,43 +428,6 @@ function togglePasswordVisibility() {
 // Alternar visibilidad de confirmación de contraseña
 function toggleConfirmPasswordVisibility() {
   showConfirmPassword.value = !showConfirmPassword.value;
-}
-
-// Manejar carga de archivo
-function handleFileUpload(event) {
-  const file = event.target.files[0];
-  if (!file) {
-    form.fotoPerfil = null;
-    previewImage.value = null;
-    fileError.value = '';
-    return;
-  }
-  
-  // Validar tipo de archivo
-  if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
-    fileError.value = 'Por favor, sube una imagen válida (jpg, jpeg, png).';
-    form.fotoPerfil = null;
-    previewImage.value = null;
-    return;
-  }
-  
-  // Validar tamaño de archivo (5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    fileError.value = 'La imagen no debe exceder los 5MB.';
-    form.fotoPerfil = null;
-    previewImage.value = null;
-    return;
-  }
-  
-  fileError.value = '';
-  form.fotoPerfil = file;
-  
-  // Crear vista previa
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    previewImage.value = e.target.result;
-  };
-  reader.readAsDataURL(file);
 }
 
 // Enviar formulario
@@ -495,8 +452,7 @@ async function onSubmit() {
       especialidad: form.especialidad,
       telefono: form.telefono,
       correo: form.correo,
-      contrasena: form.contrasena,
-      fotoPerfil: form.fotoPerfil,
+      contrasena: form.contrasena
     };
     
     // Emitir evento al componente padre
@@ -519,15 +475,20 @@ function resetForm() {
   form.telefono = '';
   form.correo = '';
   form.contrasena = '';
-  form.fotoPerfil = null;
   confirmPassword.value = '';
-  previewImage.value = null;
   phoneError.value = '';
   emailError.value = '';
   passwordError.value = '';
   confirmPasswordError.value = '';
-  fileError.value = '';
 }
+
+// Ejecutar validaciones iniciales para todos los campos
+onMounted(() => {
+  validatePhone();
+  validateEmail();
+  validatePassword();
+  validateConfirmPassword();
+});
 </script>
 
 <style scoped>
@@ -543,6 +504,15 @@ button[type="submit"]:not(:disabled):hover {
 }
 
 /* Animación para la vista previa de la imagen */
+img {
+  transition: all 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+</style>
+</ imagen */
 img {
   transition: all 0.3s ease;
 }
