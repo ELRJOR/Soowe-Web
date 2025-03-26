@@ -54,7 +54,7 @@
             required 
             class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
           >
-            <option value="" disabled selected>Seleccione especialidad</option>
+            <option value="" disabled>Seleccione especialidad</option>
             <option value="Enfermería General">Enfermería General</option>
             <option value="Pediatría">Pediatría</option>
             <option value="Geriatría">Geriatría</option>
@@ -265,11 +265,40 @@
       </div>
     </div>
 
+    <!-- Campo de Foto de Perfil -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Foto de Perfil</label>
+      <div class="flex items-center">
+        <div class="flex-shrink-0 mr-4">
+          <img 
+            :src="previewImage || 'https://via.placeholder.com/100?text=Foto'" 
+            alt="Vista previa" 
+            class="h-20 w-20 rounded-full object-cover border border-gray-200"
+          />
+        </div>
+        <div class="flex-1">
+          <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+            <span>Subir una foto</span>
+            <input 
+              id="file-upload" 
+              name="file-upload" 
+              type="file" 
+              class="sr-only" 
+              @change="handleFileUpload" 
+              accept=".jpg, .jpeg, .png"
+            />
+          </label>
+          <p class="text-xs text-gray-500 mt-1">PNG, JPG o JPEG hasta 5MB</p>
+          <p v-if="fileError" class="mt-1 text-sm text-red-600">{{ fileError }}</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Botón de Registro -->
     <div class="flex justify-end">
       <button 
         type="submit" 
-        :disabled="isSubmitting || hasErrors" 
+        :disabled="isSubmitting || !isFormValid" 
         class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
       >
         <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -279,11 +308,20 @@
         {{ isSubmitting ? 'Registrando...' : 'Registrar Enfermero' }}
       </button>
     </div>
+    
+    <!-- Modal de éxito -->
+    <SuccessModal 
+      :is-open="showSuccessModal" 
+      :enfermero-nombre="successEnfermeroNombre" 
+      @close="closeSuccessModal" 
+      @add-another="addAnotherEnfermero"
+    />
   </form>
 </template>
 
 <script setup>
 import { reactive, ref, computed } from 'vue';
+import SuccessModal from './SuccessModal.vue';
 
 const emit = defineEmits(['submit']);
 
@@ -293,7 +331,8 @@ const form = reactive({
   especialidad: '',
   telefono: '',
   correo: '',
-  contrasena: ''
+  contrasena: '',
+  fotoPerfil: null
 });
 
 const confirmPassword = ref('');
@@ -301,14 +340,20 @@ const phoneError = ref('');
 const emailError = ref('');
 const passwordError = ref('');
 const confirmPasswordError = ref('');
+const fileError = ref('');
 const isSubmitting = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+const previewImage = ref(null);
+
+// Variables para el modal de éxito
+const showSuccessModal = ref(false);
+const successEnfermeroNombre = ref('');
 
 // Validación de teléfono
 function validatePhone() {
   form.telefono = form.telefono.replace(/\D/g, '');
-  if (form.telefono.length > 0 && form.telefono.length !== 10) {
+  if (form.telefono && form.telefono.length !== 10) {
     phoneError.value = 'El teléfono debe tener 10 dígitos.';
   } else {
     phoneError.value = '';
@@ -327,22 +372,20 @@ function validateEmail() {
 
 // Validación de contraseña
 function validatePassword() {
-  if (!form.contrasena) return;
-  
   const hasDigit = /\d/.test(form.contrasena);
   const hasUppercase = /[A-Z]/.test(form.contrasena);
   const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
   const isLongEnough = form.contrasena.length >= 8;
-
-  if (!isLongEnough) {
+  
+  if (form.contrasena && !isLongEnough) {
     passwordError.value = 'La contraseña debe tener al menos 8 caracteres.';
-  } else if (!(hasDigit && hasUppercase && hasSpecial)) {
+  } else if (form.contrasena && !(hasDigit && hasUppercase && hasSpecial)) {
     passwordError.value = 'La contraseña debe incluir al menos un número, una mayúscula y un carácter especial.';
   } else {
     passwordError.value = '';
   }
-
-  // Actualizar validación de confirmación si ya hay un valor
+  
+  // Si ya se ingresó confirmación, validarla nuevamente
   if (confirmPassword.value) {
     validateConfirmPassword();
   }
@@ -360,13 +403,13 @@ function validateConfirmPassword() {
 // Fortaleza de la contraseña
 const passwordStrength = computed(() => {
   if (!form.contrasena) return '';
-
+  
   const hasDigit = /\d/.test(form.contrasena);
   const hasUppercase = /[A-Z]/.test(form.contrasena);
   const hasLowercase = /[a-z]/.test(form.contrasena);
   const hasSpecial = /[!@#$%^&*]/.test(form.contrasena);
   const length = form.contrasena.length;
-
+  
   let score = 0;
   if (length >= 8) score += 1;
   if (length >= 12) score += 1;
@@ -374,7 +417,7 @@ const passwordStrength = computed(() => {
   if (hasUppercase) score += 1;
   if (hasLowercase) score += 1;
   if (hasSpecial) score += 1;
-
+  
   if (score <= 2) return 'weak';
   if (score <= 3) return 'medium';
   if (score <= 4) return 'strong';
@@ -391,9 +434,22 @@ const passwordStrengthText = computed(() => {
   }
 });
 
-// Verificar si hay errores
-const hasErrors = computed(() => {
-  return phoneError.value || emailError.value || passwordError.value || confirmPasswordError.value;
+// Propiedad computada para validar el formulario
+const isFormValid = computed(() => {
+  return (
+    form.nombre &&
+    form.apellido &&
+    form.especialidad &&
+    form.telefono &&
+    form.correo &&
+    form.contrasena &&
+    confirmPassword.value &&
+    !phoneError.value &&
+    !emailError.value &&
+    !passwordError.value &&
+    !confirmPasswordError.value &&
+    !fileError.value
+  );
 });
 
 // Alternar visibilidad de contraseña
@@ -406,21 +462,56 @@ function toggleConfirmPasswordVisibility() {
   showConfirmPassword.value = !showConfirmPassword.value;
 }
 
+// Manejar carga de archivo
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) {
+    form.fotoPerfil = null;
+    previewImage.value = null;
+    fileError.value = '';
+    return;
+  }
+  
+  // Validar tipo de archivo
+  if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+    fileError.value = 'Por favor, sube una imagen válida (jpg, jpeg, png).';
+    form.fotoPerfil = null;
+    previewImage.value = null;
+    return;
+  }
+  
+  // Validar tamaño de archivo (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    fileError.value = 'La imagen no debe exceder los 5MB.';
+    form.fotoPerfil = null;
+    previewImage.value = null;
+    
+    return;
+  }
+  
+  fileError.value = '';
+  form.fotoPerfil = file;
+  
+  // Crear vista previa
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImage.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 // Enviar formulario
 async function onSubmit() {
-  // Validar todos los campos
+  // Ejecutar validaciones finales
   validatePhone();
   validateEmail();
   validatePassword();
   validateConfirmPassword();
-
-  // Verificar si hay errores
-  if (hasErrors.value) {
-    return;
-  }
-
+  
+  if (!isFormValid.value) return;
+  
   isSubmitting.value = true;
-
+  
   try {
     const formData = {
       nombre: form.nombre,
@@ -428,19 +519,34 @@ async function onSubmit() {
       especialidad: form.especialidad,
       telefono: form.telefono,
       correo: form.correo,
-      contrasena: form.contrasena
+      contrasena: form.contrasena,
+      fotoPerfil: form.fotoPerfil,
     };
     
     // Emitir evento al componente padre
     emit('submit', formData);
     
-    // Resetear formulario
-    resetForm();
+    // Mostrar modal de éxito
+    successEnfermeroNombre.value = `${form.nombre} ${form.apellido}`;
+    showSuccessModal.value = true;
+    
   } catch (error) {
     console.error('Error al enviar formulario:', error);
   } finally {
     isSubmitting.value = false;
   }
+}
+
+// Cerrar modal de éxito
+function closeSuccessModal() {
+  showSuccessModal.value = false;
+  resetForm();
+}
+
+// Agregar otro enfermero
+function addAnotherEnfermero() {
+  showSuccessModal.value = false;
+  resetForm();
 }
 
 // Resetear formulario
@@ -451,11 +557,14 @@ function resetForm() {
   form.telefono = '';
   form.correo = '';
   form.contrasena = '';
+  form.fotoPerfil = null;
   confirmPassword.value = '';
+  previewImage.value = null;
   phoneError.value = '';
   emailError.value = '';
   passwordError.value = '';
   confirmPasswordError.value = '';
+  fileError.value = '';
 }
 </script>
 
