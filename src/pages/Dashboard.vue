@@ -5,7 +5,7 @@
       <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Panel de Control</h1>
-          <p class="text-gray-500">Bienvenido de nuevo, <span class="font-medium text-blue-600">Administrador</span></p>
+          <p class="text-gray-500">Bienvenido de nuevo,  <span class="font-medium text-blue-600">{{ adminName }}</span></p>
         </div>
         <ViewButtons :selectedView="selectedView" :changeView="changeView" />
       </header>
@@ -46,6 +46,7 @@ import StatsCard from '@/components/DashboardComponents/StatsCard.vue';
 import ChartCard from '@/components/DashboardComponents/ChartCard.vue';
 
 // Variables reactivas
+const adminName = ref("Administrador");
 const selectedView = ref('organization');
 const nurseCount = ref(0);
 const incomingRequests = ref(0);
@@ -373,6 +374,35 @@ const fetchCompletedRequests = async () => {
   }
 };
 
+const fetchAdminDetails = async () => {
+  try {
+    const token = getToken();
+    const orgId = getOrganizationId();  // Usamos el id almacenado en localStorage
+    if (!token || !orgId) {
+      console.error("Token o id de la organización no válidos");
+      return;
+    }
+    
+    const response = await api.get('/api/admin/administradores', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    if (Array.isArray(response.data)) {
+      const admin = response.data.find(item => String(item.organizacion_id) === String(orgId));
+      if (admin) {
+        adminName.value = `${admin.nombre} ${admin.apellido}`;
+      } else {
+        console.warn("No se encontró un administrador para la organizacion_id:", orgId);
+      }
+    } else {
+      console.error("La respuesta no es un array:", response.data);
+    }
+  } catch (error) {
+    console.error("Error al obtener los detalles del administrador:", error.response?.data || error);
+  }
+};
+
+
 // Función para obtener enfermeros
 const fetchEnfermeros = async () => {
   try {
@@ -406,6 +436,7 @@ onMounted(() => {
   fetchEnfermeros();
   fetchIncomingRequests();
   fetchCompletedRequests();
+  fetchAdminDetails();
 });
 </script>
 

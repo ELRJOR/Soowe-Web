@@ -29,7 +29,7 @@
     <!-- Íconos y menú de perfil -->
     <div class="flex items-center space-x-3 md:space-x-5 relative" ref="profileMenu">
       <!-- Settings Icon (SVG) -->
-      <button class="group relative">
+      <button class="group relative" @click="goToSettings">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 cursor-pointer transition-transform duration-300 ease-in-out group-hover:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -38,12 +38,12 @@
       </button>
       
       <!-- Notification Icon (SVG) -->
-      <button class="group relative">
+      <button class="group relative" @click="toggleNotificationsPanel">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 cursor-pointer transition-all duration-300 ease-in-out group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
         </svg>
-        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center animate-pulse">2</span>
+        <span v-if="unreadNotificationsCount > 0" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center animate-pulse">{{ unreadNotificationsCount }}</span>
       </button>
       
       <!-- Profile Menu -->
@@ -86,7 +86,7 @@
         >
           <div class="py-2 px-3 bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-200">
             <p class="text-sm font-medium text-gray-600">Conectado como</p>
-            <p class="text-blue-700 font-bold truncate">usuario@soowe.com</p>
+            <p class="text-blue-700 font-bold truncate">{{ userEmail }}</p>
           </div>
           <ul>
             <li @click="goToProfile" class="px-4 py-3 text-primary cursor-pointer hover:bg-blue-50 transition-colors duration-200 ease-in-out flex items-center">
@@ -192,13 +192,27 @@
       @confirm="confirmLogout"
       @cancel="closeLogoutModal"
     />
+
+    <!-- Panel de notificaciones -->
+    <NotificationsPanel
+      :is-open="isNotificationsPanelOpen"
+      :notifications="notifications"
+      @close="toggleNotificationsPanel"
+      @read="markNotificationAsRead"
+      @mark-all-read="markAllNotificationsAsRead"
+      @action="handleNotificationAction"
+      @view-all="viewAllNotifications"
+    />
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+// Importar los componentes necesarios
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import LogoutModal from '@/components/DashboardComponents/LogoutModal.vue';
+import NotificationsPanel from '@/components/DashboardComponents/NotificationsPanel.vue';
+import { getUserEmail } from "@/api/auth.js";
 
 const Menu = ref([
   { name: 'Dashboard', route: '/dashboard' },
@@ -215,6 +229,54 @@ const dropdownMenu = ref(null);
 const route = useRoute();
 const router = useRouter();
 
+const userEmail = ref("");
+
+onMounted(() => {
+  userEmail.value = getUserEmail();
+  document.addEventListener('click', handleClickOutside);
+});
+
+// Añadir estado para el panel de notificaciones
+const isNotificationsPanelOpen = ref(false);
+const notifications = ref([
+  {
+    id: 1,
+    type: 'solicitud',
+    title: 'Nueva solicitud recibida',
+    message: 'Se ha recibido una nueva solicitud de servicio de enfermería para el paciente Juan Pérez.',
+    time: new Date(Date.now() - 30 * 60000), // 30 minutos atrás
+    read: false,
+    actions: [
+      { label: 'Ver detalles', primary: true },
+      { label: 'Asignar enfermero', primary: false }
+    ]
+  },
+  {
+    id: 2,
+    type: 'enfermero',
+    title: 'Nuevo enfermero registrado',
+    message: 'María Rodríguez se ha registrado como nueva enfermera en el sistema.',
+    time: new Date(Date.now() - 2 * 60 * 60000), // 2 horas atrás
+    read: false,
+    actions: [
+      { label: 'Ver perfil', primary: true }
+    ]
+  },
+  {
+    id: 3,
+    type: 'sistema',
+    title: 'Actualización del sistema',
+    message: 'Se ha realizado una actualización del sistema con nuevas funcionalidades.',
+    time: new Date(Date.now() - 5 * 60 * 60000), // 5 horas atrás
+    read: true
+  }
+]);
+
+// Calcular el número de notificaciones no leídas
+const unreadNotificationsCount = computed(() => {
+  return notifications.value.filter(notification => !notification.read).length;
+});
+
 const closeMenu = () => {
   isMenuOpen.value = false;
   document.body.style.overflow = 'auto';
@@ -229,6 +291,41 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
+// Función para alternar el panel de notificaciones
+const toggleNotificationsPanel = () => {
+  isNotificationsPanelOpen.value = !isNotificationsPanelOpen.value;
+  if (isDropdownOpen.value) {
+    isDropdownOpen.value = false;
+  }
+};
+
+// Función para marcar una notificación como leída
+const markNotificationAsRead = (id) => {
+  const notification = notifications.value.find(n => n.id === id);
+  if (notification) {
+    notification.read = true;
+  }
+};
+
+// Función para marcar todas las notificaciones como leídas
+const markAllNotificationsAsRead = () => {
+  notifications.value.forEach(notification => {
+    notification.read = true;
+  });
+};
+
+// Función para manejar acciones de notificaciones
+const handleNotificationAction = ({ action, notificationId }) => {
+  console.log(`Acción: ${action.label}, ID de notificación: ${notificationId}`);
+  // Aquí puedes implementar la lógica específica para cada acción
+};
+
+// Función para ver todas las notificaciones
+const viewAllNotifications = () => {
+  isNotificationsPanelOpen.value = false;
+  router.push('/notificaciones');
+};
+
 const isActive = (routeName) => {
   return route.path === routeName;
 };
@@ -240,19 +337,19 @@ const handleClickOutside = (event) => {
   }
 };
 
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
-});
-
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside);
 });
 
+// Actualizar la función goToProfile
 const goToProfile = () => {
-  console.log('Go to profile page');
-  // Implementar navegación al perfil
-  // router.push('/profile');
+  router.push('/perfil');
   isDropdownOpen.value = false;
+};
+
+// Añadir función para ir a configuración
+const goToSettings = () => {
+  router.push('/configuracion');
 };
 
 const openLogoutModal = () => {
@@ -294,4 +391,3 @@ const confirmLogout = () => {
   animation: pulse 2s infinite;
 }
 </style>
-

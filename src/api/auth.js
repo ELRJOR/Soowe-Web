@@ -46,6 +46,21 @@ export const getOrganizationId = () => {
   return organizacionId;
 };
 
+export const getUserEmail = () => {
+  const token = getToken();
+  if (!token) return "Usuario desconocido";
+
+  try {
+    const decodedToken = jwtDecode(token);
+    console.log("📩 Correo extraído del token:", decodedToken.correo);
+    return decodedToken.correo || "Usuario desconocido"; // Cambiado de "email" a "correo"
+  } catch (error) {
+    console.error("❌ Error al decodificar el token:", error);
+    return "Usuario desconocido";
+  }
+};
+
+
 // Obtener el token desde localStorage
 export const getToken = () => {
   const token = localStorage.getItem('token');
@@ -55,3 +70,5 @@ export const getToken = () => {
   }
   return token;
 };
+
+

@@ -16,14 +16,25 @@ const searchQuery = ref('');
 const filteredEnfermeros = computed(() => {
   if (!searchQuery.value) return enfermeros.value;
   
-  const query = searchQuery.value.toLowerCase();
-  return enfermeros.value.filter(enfermero => 
-    enfermero.nombre.toLowerCase().includes(query) || 
-    enfermero.apellido.toLowerCase().includes(query) || 
-    enfermero.especialidad.toLowerCase().includes(query) ||
-    enfermero.correo.toLowerCase().includes(query)
-  );
+  // Dividir la búsqueda por espacios y eliminar entradas vacías
+  const palabras = searchQuery.value.toLowerCase().split(' ').filter(p => p);
+  
+  return enfermeros.value.filter(enfermero => {
+    const nombre = enfermero.nombre.toLowerCase();
+    const apellido = enfermero.apellido.toLowerCase();
+    const especialidad = enfermero.especialidad.toLowerCase();
+    const correo = enfermero.correo.toLowerCase();
+    
+    // Se comprueba que cada palabra esté en alguno de los campos
+    return palabras.every(palabra =>
+      nombre.includes(palabra) ||
+      apellido.includes(palabra) ||
+      especialidad.includes(palabra) ||
+      correo.includes(palabra)
+    );
+  });
 });
+
 
 // Obtener lista de enfermeros
 const getEnfermeros = async () => {

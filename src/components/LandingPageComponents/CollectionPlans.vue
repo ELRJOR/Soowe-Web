@@ -1,3 +1,5 @@
+
+
 <template>
     <section class="text-primary mt-18" id="pricing">
         <div class="absolute right-0 top-[110rem] h-full w-full justify-end">
@@ -52,7 +54,7 @@ const Pricing = ref([
         id: 1,
         name: "Suscripción Mensual",
         description: "Accede a todas las funciones con un pago fijo al mes.",
-        price: "$399.0/mes",
+        price: "$599.00/mes",
     },
 ]);
 

@@ -75,6 +75,7 @@
             </svg>
           </div>
           <input 
+            maxlength="10"
             type="tel" 
             v-model="form.telefono" 
             @input="validatePhone" 
