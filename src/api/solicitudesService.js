@@ -29,7 +29,7 @@ export const getPatientById = async (patientId) => {
 // Obtener datos de un enfermero por ID
 export const getNurseById = async (nurseId) => {
   try {
-    const response = await api.get(`/api/mobile/enfermeros/${nurseId}`);
+    const response = await api.get(`/api/admin/enfermeros/${nurseId}`);
     console.log("🩺 Datos del enfermero:", response.data);
     return response.data;
   } catch (error) {
@@ -37,6 +37,7 @@ export const getNurseById = async (nurseId) => {
     throw error.response?.data?.message || 'Error al obtener el enfermero';
   }
 };
+
 
 // Obtener la lista de enfermeros de la organización del administrador
 export const getNurses = async () => {
